@@ -74,4 +74,21 @@ public ResponseEntity<CheckInResponse> createCheckIn(
             .status(HttpStatus.CREATED)
             .body(new CheckInResponse(checkIn));
 }
+@GetMapping("/{profileId}/check-ins")
+public ResponseEntity<List<CheckInResponse>> getCheckIns(
+        @PathVariable Long profileId,
+        Authentication authentication) {
+
+    List<CheckInResponse> checkIns =
+            checkInService
+                    .getCheckIns(
+                            profileId,
+                            authentication.getName()
+                    )
+                    .stream()
+                    .map(CheckInResponse::new)
+                    .toList();
+
+    return ResponseEntity.ok(checkIns);
+}
 }

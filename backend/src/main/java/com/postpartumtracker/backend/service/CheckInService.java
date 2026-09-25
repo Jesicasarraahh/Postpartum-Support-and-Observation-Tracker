@@ -8,6 +8,7 @@ import com.postpartumtracker.backend.repository.CheckInRepository;
 import com.postpartumtracker.backend.repository.PostpartumProfileRepository;
 import com.postpartumtracker.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class CheckInService {
@@ -60,4 +61,30 @@ public class CheckInService {
 
         return checkInRepository.save(checkIn);
     }
+    public List<CheckIn> getCheckIns(
+        Long profileId,
+        String email) {
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() ->
+                    new IllegalArgumentException("User not found")
+            );
+
+    PostpartumProfile profile =
+            postpartumProfileRepository.findById(profileId)
+                    .orElseThrow(() ->
+                            new IllegalArgumentException(
+                                    "Postpartum profile not found"
+                            )
+                    );
+
+    if (!profile.getOwner().getId().equals(user.getId())) {
+        throw new IllegalArgumentException(
+                "You do not have permission to view these check-ins"
+        );
+    }
+
+    return checkInRepository
+            .findByPostpartumProfileOrderByCreatedAtDesc(profile);
+}
 }
