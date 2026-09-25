@@ -11,6 +11,8 @@ import com.postpartumtracker.backend.dto.UserResponse;
 import com.postpartumtracker.backend.dto.LoginRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import com.postpartumtracker.backend.dto.LoginResponse;
+import com.postpartumtracker.backend.service.JwtService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,12 +20,16 @@ public class AuthController {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
     public AuthController(UserService userService,
-        AuthenticationManager authenticationManager
+        AuthenticationManager authenticationManager,
+        JwtService jwtService
     ) 
     {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
@@ -35,7 +41,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @PostMapping("/login")
-public ResponseEntity<String> login(
+public ResponseEntity<LoginResponse> login(
         @Valid @RequestBody LoginRequest request) {
 
     authenticationManager.authenticate(
@@ -45,6 +51,12 @@ public ResponseEntity<String> login(
         )
     );
 
-    return ResponseEntity.ok("Login successful");
+    String token = jwtService.generateToken(
+            request.getEmail().toLowerCase()
+    );
+
+    return ResponseEntity.ok(new LoginResponse(token));
 }
+   
+
 }
