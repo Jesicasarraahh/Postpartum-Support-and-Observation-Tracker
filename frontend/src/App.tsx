@@ -9,6 +9,11 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProfileSetupPage
+    from "./pages/ProfileSetupPage";
+
+import NewCheckInPage
+    from "./pages/NewCheckInPage";
 
 function App() {
 
@@ -39,6 +44,23 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+    path="/profile/setup"
+    element={
+        <ProtectedRoute>
+            <ProfileSetupPage />
+        </ProtectedRoute>
+    }
+/>
+
+<Route
+    path="/check-in/:profileId"
+    element={
+        <ProtectedRoute>
+            <NewCheckInPage />
+        </ProtectedRoute>
+    }
+/>
 
             </Routes>
         </BrowserRouter>

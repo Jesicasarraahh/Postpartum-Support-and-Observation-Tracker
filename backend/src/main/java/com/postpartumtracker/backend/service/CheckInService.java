@@ -19,7 +19,7 @@ import com.postpartumtracker.backend.repository.PhysicalFeelingRepository;
 import com.postpartumtracker.backend.repository.PostpartumProfileRepository;
 import com.postpartumtracker.backend.repository.UserRepository;
 
-import org.jspecify.annotations.Nullable;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -169,9 +169,10 @@ public class CheckInService {
     }
 
     public CheckInResponse buildCheckInResponse(CheckIn checkIn) {
-        List<String> moods =
+
+    List<String> moods =
             checkInMoodRepository
-                    .findByCheckIn(checkIn)
+                    .findMoodsForCheckIn(checkIn)
                     .stream()
                     .map(checkInMood ->
                             checkInMood.getMood().getName())
@@ -179,7 +180,7 @@ public class CheckInService {
 
     List<String> physicalFeelings =
             checkInPhysicalFeelingRepository
-                    .findByCheckIn(checkIn)
+                    .findPhysicalFeelingsForCheckIn(checkIn)
                     .stream()
                     .map(link ->
                             link.getPhysicalFeeling().getName())
@@ -190,6 +191,5 @@ public class CheckInService {
             moods,
             physicalFeelings
     );
-        
-    }
+}
 }
