@@ -1,5 +1,6 @@
 package com.postpartumtracker.backend.service;
 
+import com.postpartumtracker.backend.dto.CheckInResponse;
 import com.postpartumtracker.backend.dto.CreateCheckInRequest;
 
 import com.postpartumtracker.backend.entity.CheckIn;
@@ -18,6 +19,7 @@ import com.postpartumtracker.backend.repository.PhysicalFeelingRepository;
 import com.postpartumtracker.backend.repository.PostpartumProfileRepository;
 import com.postpartumtracker.backend.repository.UserRepository;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -164,5 +166,30 @@ public class CheckInService {
 
         return checkInRepository
                 .findByPostpartumProfileOrderByCreatedAtDesc(profile);
+    }
+
+    public CheckInResponse buildCheckInResponse(CheckIn checkIn) {
+        List<String> moods =
+            checkInMoodRepository
+                    .findByCheckIn(checkIn)
+                    .stream()
+                    .map(checkInMood ->
+                            checkInMood.getMood().getName())
+                    .toList();
+
+    List<String> physicalFeelings =
+            checkInPhysicalFeelingRepository
+                    .findByCheckIn(checkIn)
+                    .stream()
+                    .map(link ->
+                            link.getPhysicalFeeling().getName())
+                    .toList();
+
+    return new CheckInResponse(
+            checkIn,
+            moods,
+            physicalFeelings
+    );
+        
     }
 }

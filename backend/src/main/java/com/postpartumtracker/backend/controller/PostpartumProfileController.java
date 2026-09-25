@@ -72,7 +72,7 @@ public ResponseEntity<CheckInResponse> createCheckIn(
 
     return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(new CheckInResponse(checkIn));
+            .body(checkInService.buildCheckInResponse(checkIn));
 }
 @GetMapping("/{profileId}/check-ins")
 public ResponseEntity<List<CheckInResponse>> getCheckIns(
@@ -86,7 +86,7 @@ public ResponseEntity<List<CheckInResponse>> getCheckIns(
                             authentication.getName()
                     )
                     .stream()
-                    .map(CheckInResponse::new)
+                    .map(checkInService::buildCheckInResponse)
                     .toList();
 
     return ResponseEntity.ok(checkIns);

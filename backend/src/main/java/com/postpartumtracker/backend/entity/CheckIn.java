@@ -22,7 +22,9 @@ public class CheckIn {
 
     private Double sleepHours;
 
-    private String medicationStatus;
+    @Enumerated(EnumType.STRING)
+    private MedicationStatus medicationStatus;
+
 
     @Column(columnDefinition = "TEXT")
     private String notes;
@@ -75,11 +77,11 @@ public class CheckIn {
         this.sleepHours = sleepHours;
     }
 
-    public String getMedicationStatus() {
+    public MedicationStatus getMedicationStatus() {
         return medicationStatus;
     }
 
-    public void setMedicationStatus(String medicationStatus) {
+    public void setMedicationStatus(MedicationStatus medicationStatus) {
         this.medicationStatus = medicationStatus;
     }
 

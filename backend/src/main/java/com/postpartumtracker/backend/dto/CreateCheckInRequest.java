@@ -4,6 +4,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 
 import java.util.List;
+import com.postpartumtracker.backend.entity.MedicationStatus;
 
 public class CreateCheckInRequest {
 
@@ -11,7 +12,7 @@ public class CreateCheckInRequest {
     @DecimalMax("24.0")
     private Double sleepHours;
 
-    private String medicationStatus;
+    private MedicationStatus medicationStatus;
 
     private String notes;
 
@@ -30,11 +31,11 @@ public class CreateCheckInRequest {
         this.sleepHours = sleepHours;
     }
 
-    public String getMedicationStatus() {
+    public MedicationStatus getMedicationStatus() {
         return medicationStatus;
     }
 
-    public void setMedicationStatus(String medicationStatus) {
+    public void setMedicationStatus(MedicationStatus medicationStatus) {
         this.medicationStatus = medicationStatus;
     }
 
