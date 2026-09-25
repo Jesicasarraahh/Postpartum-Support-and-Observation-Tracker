@@ -6,6 +6,7 @@ import com.postpartumtracker.backend.entity.User;
 import com.postpartumtracker.backend.repository.PostpartumProfileRepository;
 import com.postpartumtracker.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class PostpartumProfileService {
@@ -36,5 +37,12 @@ public class PostpartumProfileService {
         profile.setDeliveryDate(request.getDeliveryDate());
 
         return postpartumProfileRepository.save(profile);
+    }
+    public List<PostpartumProfile> getProfilesForUser(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("User not found")
+                );
+        return postpartumProfileRepository.findByOwner(user);
     }
 }

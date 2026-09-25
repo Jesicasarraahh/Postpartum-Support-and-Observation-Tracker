@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/postpartum-profiles")
@@ -37,4 +38,17 @@ public class PostpartumProfileController {
                 .status(HttpStatus.CREATED)
                 .body(new PostpartumProfileResponse(profile));
     }
+    @GetMapping
+public ResponseEntity<List<PostpartumProfileResponse>> getMyProfiles(
+        Authentication authentication) {
+
+    List<PostpartumProfileResponse> profiles =
+            postpartumProfileService
+                    .getProfilesForUser(authentication.getName())
+                    .stream()
+                    .map(PostpartumProfileResponse::new)
+                    .toList();
+
+    return ResponseEntity.ok(profiles);
+}
 }
