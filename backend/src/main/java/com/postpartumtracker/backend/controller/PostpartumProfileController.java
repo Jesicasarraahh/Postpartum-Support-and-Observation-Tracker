@@ -10,17 +10,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import com.postpartumtracker.backend.dto.CheckInResponse;
+import com.postpartumtracker.backend.dto.CreateCheckInRequest;
+import com.postpartumtracker.backend.entity.CheckIn;
+import com.postpartumtracker.backend.service.CheckInService;
 
 @RestController
 @RequestMapping("/api/postpartum-profiles")
 public class PostpartumProfileController {
 
     private final PostpartumProfileService postpartumProfileService;
+    private final CheckInService checkInService;
 
     public PostpartumProfileController(
-            PostpartumProfileService postpartumProfileService) {
+            PostpartumProfileService postpartumProfileService,
+            CheckInService checkInService) {
 
         this.postpartumProfileService = postpartumProfileService;
+        this.checkInService = checkInService;
     }
 
     @PostMapping
@@ -50,5 +57,21 @@ public ResponseEntity<List<PostpartumProfileResponse>> getMyProfiles(
                     .toList();
 
     return ResponseEntity.ok(profiles);
+}
+@PostMapping("/{profileId}/check-ins")
+public ResponseEntity<CheckInResponse> createCheckIn(
+        @PathVariable Long profileId,
+        @Valid @RequestBody CreateCheckInRequest request,
+        Authentication authentication) {
+
+    CheckIn checkIn = checkInService.createCheckIn(
+            profileId,
+            authentication.getName(),
+            request
+    );
+
+    return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(new CheckInResponse(checkIn));
 }
 }
