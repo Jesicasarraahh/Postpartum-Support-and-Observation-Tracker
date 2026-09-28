@@ -12,7 +12,9 @@ import com.postpartumtracker.backend.dto.LoginRequest;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import com.postpartumtracker.backend.dto.LoginResponse;
+import com.postpartumtracker.backend.service.EmailVerificationService;
 import com.postpartumtracker.backend.service.JwtService;
+import com.postpartumtracker.backend.service.EmailVerificationService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,15 +23,18 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final EmailVerificationService emailVerificationService;
 
     public AuthController(UserService userService,
         AuthenticationManager authenticationManager,
-        JwtService jwtService
+        JwtService jwtService,
+        EmailVerificationService emailVerificationService
     ) 
     {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.emailVerificationService = emailVerificationService;
     }
 
     @PostMapping("/register")
@@ -56,6 +61,17 @@ public ResponseEntity<LoginResponse> login(
     );
 
     return ResponseEntity.ok(new LoginResponse(token));
+}
+@GetMapping("/verify-email")
+public ResponseEntity<String> verifyEmail(
+        @RequestParam String token) {
+
+    emailVerificationService
+            .verifyEmail(token);
+
+    return ResponseEntity.ok(
+            "Email verified successfully"
+    );
 }
    
 
