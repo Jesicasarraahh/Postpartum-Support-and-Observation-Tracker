@@ -1,52 +1,80 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+import {
+    Link,
+    useNavigate
+} from "react-router-dom";
 
 import { apiRequest } from "../services/api";
 import { saveToken } from "../auth/token";
-
-type LoginResponse = {
-    token: string;
-};
 
 function LoginPage() {
 
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] =
+        useState("");
 
-    const [error, setError] = useState("");
+    const [password, setPassword] =
+        useState("");
 
-    async function handleSubmit(event: FormEvent) {
+    const [error, setError] =
+        useState("");
+
+    const [loading, setLoading] =
+        useState(false);
+
+    async function handleSubmit(
+        event: FormEvent
+    ) {
 
         event.preventDefault();
 
         setError("");
+        setLoading(true);
 
-        const response = await apiRequest(
-            "/api/auth/login",
-            {
-                method: "POST",
+        try {
 
-                body: JSON.stringify({
-                    email,
-                    password
-                })
+            const response =
+                await apiRequest(
+                    "/api/auth/login",
+                    {
+                        method: "POST",
+
+                        body: JSON.stringify({
+                            email,
+                            password
+                        })
+                    }
+                );
+
+            if (!response.ok) {
+
+                setError(
+                    "Invalid email or password."
+                );
+
+                return;
             }
-        );
 
-        if (!response.ok) {
-            setError("Invalid email or password.");
-            return;
+            const data =
+                await response.json();
+
+            saveToken(data.token);
+
+            navigate("/dashboard");
+
+        } catch {
+
+            setError(
+                "Something went wrong while logging in."
+            );
+
+        } finally {
+
+            setLoading(false);
         }
-
-        const data: LoginResponse =
-            await response.json();
-
-        saveToken(data.token);
-
-        navigate("/dashboard");
     }
 
     return (
@@ -54,48 +82,86 @@ function LoginPage() {
 
             <h1>Login</h1>
 
+            <p>
+                Welcome back to the Postpartum
+                Support & Observation Tracker.
+            </p>
+
             <form onSubmit={handleSubmit}>
 
                 <div>
-                    <label>Email</label>
+
+                    <label htmlFor="email">
+                        Email
+                    </label>
+
+                    <br />
 
                     <input
+                        id="email"
                         type="email"
                         value={email}
                         onChange={(event) =>
-                            setEmail(event.target.value)
+                            setEmail(
+                                event.target.value
+                            )
                         }
                         required
                     />
+
                 </div>
 
+                <br />
+
                 <div>
-                    <label>Password</label>
+
+                    <label htmlFor="password">
+                        Password
+                    </label>
+
+                    <br />
 
                     <input
+                        id="password"
                         type="password"
                         value={password}
                         onChange={(event) =>
-                            setPassword(event.target.value)
+                            setPassword(
+                                event.target.value
+                            )
                         }
                         required
                     />
+
                 </div>
+
+                <p>
+                    <Link to="/forgot-password">
+                        Forgot password?
+                    </Link>
+                </p>
 
                 {error && (
                     <p>{error}</p>
                 )}
 
-                <button type="submit">
-                    Log In
+                <button
+                    type="submit"
+                    disabled={loading}
+                >
+                    {loading
+                        ? "Logging in..."
+                        : "Log In"}
                 </button>
 
             </form>
 
+            <br />
+
             <p>
                 Don't have an account?{" "}
                 <Link to="/register">
-                    Create one
+                    Create Account
                 </Link>
             </p>
 

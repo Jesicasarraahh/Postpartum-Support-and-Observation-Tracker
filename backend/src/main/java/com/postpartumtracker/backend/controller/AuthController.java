@@ -15,6 +15,9 @@ import com.postpartumtracker.backend.dto.LoginResponse;
 import com.postpartumtracker.backend.service.EmailVerificationService;
 import com.postpartumtracker.backend.service.JwtService;
 import com.postpartumtracker.backend.service.EmailVerificationService;
+import com.postpartumtracker.backend.dto.ForgotPasswordRequest;
+import com.postpartumtracker.backend.dto.ResetPasswordRequest;
+import com.postpartumtracker.backend.service.PasswordResetService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,17 +27,20 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final EmailVerificationService emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     public AuthController(UserService userService,
         AuthenticationManager authenticationManager,
         JwtService jwtService,
-        EmailVerificationService emailVerificationService
+        EmailVerificationService emailVerificationService,
+        PasswordResetService passwordResetService
     ) 
     {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.emailVerificationService = emailVerificationService;
+        this.passwordResetService = passwordResetService;
     }
 
     @PostMapping("/register")
@@ -71,6 +77,31 @@ public ResponseEntity<String> verifyEmail(
 
     return ResponseEntity.ok(
             "Email verified successfully"
+    );
+}
+@PostMapping("/forgot-password")
+public ResponseEntity<String> forgotPassword(
+        @RequestBody ForgotPasswordRequest request) {
+
+    passwordResetService.createResetToken(
+            request.getEmail()
+    );
+
+    return ResponseEntity.ok(
+            "Password reset email sent"
+    );
+}
+@PostMapping("/reset-password")
+public ResponseEntity<String> resetPassword(
+        @RequestBody ResetPasswordRequest request) {
+
+    passwordResetService.resetPassword(
+            request.getToken(),
+            request.getNewPassword()
+    );
+
+    return ResponseEntity.ok(
+            "Password reset successfully"
     );
 }
    

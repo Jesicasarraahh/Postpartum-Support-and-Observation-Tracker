@@ -40,7 +40,9 @@ public class SecurityConfig {
                     "/api/health",
                     "/api/auth/register",
                     "/api/auth/login",
-                    "/api/auth/verify-email"
+                    "/api/auth/verify-email",
+                    "/api/auth/forgot-password",
+                    "/api/auth/reset-password"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
