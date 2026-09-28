@@ -68,6 +68,36 @@ function DashboardPage() {
         navigate("/login");
     }
 
+    async function handleDeleteAccount() {
+    const confirmed = window.confirm(
+        "Are you sure you want to permanently delete your account? This cannot be undone."
+    );
+    if (!confirmed) {
+        return;
+    }
+    try {
+        const response =
+            await apiRequest(
+                "/api/users/me",
+                {
+                    method: "DELETE"
+                }
+            );
+        if (!response.ok) {
+            alert(
+                "Could not delete your account."
+            );
+            return;
+        }
+        removeToken();
+        navigate("/");
+    } catch {
+        alert(
+            "Something went wrong while deleting your account."
+        );
+    }
+}
+
     if (loading) {
         return <p>Loading...</p>;
     }
