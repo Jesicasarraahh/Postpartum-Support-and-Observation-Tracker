@@ -13,3 +13,12 @@ export type PostpartumProfile = {
     deliveryDate: string;
     createdAt: string;
 };
+export type CheckIn = {
+    id: number;
+    sleepHours: number | null;
+    medicationStatus: string;
+    notes: string | null;
+    createdAt: string;
+    moods: string[];
+    physicalFeelings: string[];
+};

@@ -15,6 +15,10 @@ import ProfileSetupPage
 import NewCheckInPage
     from "./pages/NewCheckInPage";
 
+import VerifyEmailPage from "./pages/VerifyEmailPage";
+import CheckInHistoryPage
+    from "./pages/CheckInHistoryPage";
+
 function App() {
 
     return (
@@ -25,6 +29,15 @@ function App() {
                     path="/"
                     element={<Navigate to="/login" replace />}
                 />
+
+                <Route
+    path="/check-ins/:profileId"
+    element={
+        <ProtectedRoute>
+            <CheckInHistoryPage />
+        </ProtectedRoute>
+    }
+/>
 
                 <Route
                     path="/login"
@@ -60,6 +73,10 @@ function App() {
             <NewCheckInPage />
         </ProtectedRoute>
     }
+/>
+<Route
+    path="/verify-email"
+    element={<VerifyEmailPage />}
 />
 
             </Routes>

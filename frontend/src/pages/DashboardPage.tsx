@@ -141,6 +141,14 @@ function DashboardPage() {
                             >
                                 New Check-In
                             </Link>
+                            <br />
+                            <br />
+
+                             <Link
+                               to={`/check-ins/${profiles[0].id}`}
+                             >
+                              View Check-In History
+                             </Link>
 
                         </div>
                     )}
