@@ -189,6 +189,35 @@ function DashboardPage() {
 
         </div>
     );
+    <section className="danger-zone">
+
+    <div>
+
+        <p className="danger-label">
+            ACCOUNT
+        </p>
+
+        <h2>
+            Delete your account
+        </h2>
+
+        <p>
+            Permanently delete your account,
+            postpartum profile, and check-in data.
+            This action cannot be undone.
+        </p>
+
+    </div>
+
+    <button
+        className="delete-account-button"
+        onClick={handleDeleteAccount}
+    >
+        Delete Account
+    </button>
+
+</section>
+
 }
 
 export default DashboardPage;

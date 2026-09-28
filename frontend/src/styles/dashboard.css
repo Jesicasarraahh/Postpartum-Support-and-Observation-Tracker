@@ -1,0 +1,81 @@
+.danger-zone {
+    max-width: 700px;
+
+    margin:
+        70px
+        auto
+        0;
+
+    padding: 28px;
+
+    background-color: #fff4f4;
+
+    border-radius:
+        var(--radius-medium);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 30px;
+}
+
+.danger-zone h2 {
+    margin:
+        5px
+        0
+        8px;
+
+    color: #7d3030;
+}
+
+.danger-zone p {
+    margin-bottom: 0;
+
+    line-height: 1.5;
+
+    color: var(--text-soft);
+}
+
+.danger-label {
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    font-weight: bold;
+
+    color: #a64b4b !important;
+}
+
+.delete-account-button {
+    flex-shrink: 0;
+
+    background-color: #9b3f3f;
+
+    color: white;
+
+    border: none;
+
+    padding:
+        12px
+        20px;
+
+    border-radius: 30px;
+
+    font-weight: bold;
+}
+
+.delete-account-button:hover {
+    background-color: #7d3030;
+}
+
+@media (max-width: 700px) {
+
+    .danger-zone {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+}
