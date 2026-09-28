@@ -1,0 +1,479 @@
+.landing-page {
+    min-height: 100vh;
+}
+
+
+/* NAVBAR */
+
+.landing-navbar {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 24px 7%;
+}
+
+.brand {
+    font-size: 20px;
+    font-weight: bold;
+
+    color: var(--plum-dark);
+}
+
+.landing-nav {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.nav-login {
+    text-decoration: none;
+
+    font-weight: 600;
+
+    padding: 10px 18px;
+}
+
+.nav-register {
+    text-decoration: none;
+
+    background-color: var(--plum);
+    color: var(--white);
+
+    padding: 11px 20px;
+
+    border-radius: 30px;
+
+    font-weight: 600;
+}
+
+
+/* HERO */
+
+.hero-section {
+    min-height: 650px;
+
+    padding: 70px 8% 90px;
+
+    display: grid;
+
+    grid-template-columns:
+        1.15fr
+        0.85fr;
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+.hero-label {
+    display: inline-block;
+
+    background-color: var(--pink);
+
+    padding: 8px 16px;
+
+    border-radius: 30px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    color: var(--plum);
+}
+
+.hero-text h1 {
+    font-size: clamp(
+        44px,
+        6vw,
+        78px
+    );
+
+    line-height: 1.03;
+
+    margin:
+        22px
+        0;
+
+    color: var(--plum-dark);
+
+    max-width: 800px;
+}
+
+.hero-description {
+    font-size: 20px;
+
+    line-height: 1.7;
+
+    color: var(--text-soft);
+
+    max-width: 620px;
+}
+
+.hero-buttons {
+    margin-top: 32px;
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 14px;
+}
+
+.primary-button,
+.secondary-button {
+    display: inline-block;
+
+    text-decoration: none;
+
+    padding:
+        15px
+        25px;
+
+    border-radius: 30px;
+
+    font-weight: bold;
+}
+
+.primary-button {
+    background-color: var(--plum);
+    color: var(--white);
+
+    box-shadow: var(--shadow-soft);
+}
+
+.secondary-button {
+    background-color: var(--white);
+    color: var(--plum);
+
+    border:
+        1px solid
+        var(--border-soft);
+}
+
+
+/* HERO FEATURE CARDS */
+
+.hero-card {
+    background-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.75
+        );
+
+    padding: 28px;
+
+    border-radius: var(--radius-large);
+
+    box-shadow: var(--shadow-soft);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.mini-card {
+    display: flex;
+
+    gap: 16px;
+
+    padding: 22px;
+
+    border-radius:
+        var(--radius-medium);
+}
+
+.mini-card h3 {
+    margin:
+        0
+        0
+        7px;
+
+    color: var(--plum-dark);
+}
+
+.mini-card p {
+    margin: 0;
+
+    color: var(--text-soft);
+
+    line-height: 1.5;
+}
+
+.mini-icon {
+    font-size: 30px;
+}
+
+.pink-card {
+    background-color:
+        var(--pink-light);
+}
+
+.peach-card {
+    background-color:
+        var(--peach-light);
+}
+
+.lavender-card {
+    background-color:
+        var(--lavender-light);
+}
+
+
+/* HOW IT WORKS */
+
+.how-section {
+    background-color: var(--white);
+
+    padding:
+        100px
+        8%;
+}
+
+.section-label {
+    font-size: 13px;
+
+    font-weight: bold;
+
+    letter-spacing: 2px;
+
+    color: var(--rose);
+}
+
+.how-section h2,
+.control-section h2,
+.disclaimer-section h2,
+.final-cta h2 {
+    font-size: 42px;
+
+    color: var(--plum-dark);
+}
+
+.section-description {
+    max-width: 700px;
+
+    color: var(--text-soft);
+
+    font-size: 18px;
+
+    line-height: 1.7;
+}
+
+.feature-grid {
+    margin-top: 50px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap: 22px;
+}
+
+.feature-card {
+    background-color:
+        var(--cream);
+
+    border:
+        1px solid
+        var(--border-soft);
+
+    border-radius:
+        var(--radius-medium);
+
+    padding: 30px;
+
+    box-shadow:
+        0
+        5px
+        18px
+        rgba(
+            94,
+            64,
+            94,
+            0.07
+        );
+}
+
+.feature-card h3 {
+    color: var(--plum-dark);
+}
+
+.feature-card p {
+    color: var(--text-soft);
+
+    line-height: 1.6;
+}
+
+.number {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background-color:
+        var(--pink);
+
+    color: var(--plum);
+
+    font-weight: bold;
+}
+
+
+/* MOTHER CONTROL SECTION */
+
+.control-section {
+    padding:
+        90px
+        8%;
+}
+
+.control-card {
+    background:
+        linear-gradient(
+            135deg,
+            var(--peach),
+            var(--pink)
+        );
+
+    border-radius:
+        var(--radius-large);
+
+    padding: 55px;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr;
+
+    gap: 50px;
+
+    align-items: center;
+
+    box-shadow:
+        var(--shadow-soft);
+}
+
+.control-card p {
+    font-size: 18px;
+
+    line-height: 1.7;
+
+    color: var(--plum-dark);
+}
+
+
+/* DISCLAIMER */
+
+.disclaimer-section {
+    padding:
+        90px
+        8%;
+
+    text-align: center;
+
+    background-color:
+        var(--lavender-light);
+}
+
+.disclaimer-section p {
+    max-width: 750px;
+
+    margin:
+        0
+        auto;
+
+    font-size: 18px;
+
+    line-height: 1.7;
+
+    color: var(--text-soft);
+}
+
+
+/* FINAL CTA */
+
+.final-cta {
+    padding:
+        110px
+        8%;
+
+    text-align: center;
+}
+
+.final-cta p {
+    color: var(--text-soft);
+
+    font-size: 18px;
+}
+
+.final-cta .hero-buttons {
+    justify-content: center;
+}
+
+
+/* FOOTER */
+
+.landing-footer {
+    background-color:
+        var(--plum-dark);
+
+    color: var(--white);
+
+    padding:
+        35px
+        8%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    flex-wrap: wrap;
+}
+
+
+/* RESPONSIVE */
+
+@media (
+    max-width: 850px
+) {
+
+    .hero-section {
+        grid-template-columns:
+            1fr;
+
+        padding-top: 40px;
+    }
+
+    .feature-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .control-card {
+        grid-template-columns:
+            1fr;
+    }
+
+    .landing-navbar {
+        align-items:
+            flex-start;
+
+        gap: 20px;
+    }
+}

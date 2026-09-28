@@ -1,6 +1,5 @@
 import {
     BrowserRouter,
-    Navigate,
     Route,
     Routes
 } from "react-router-dom";
@@ -25,6 +24,9 @@ import ForgotPasswordPage
 import ResetPasswordPage
     from "./pages/ResetPasswordPage";
 
+import LandingPage
+    from "./pages/LandingPage";
+
 function App() {
 
     return (
@@ -33,7 +35,7 @@ function App() {
 
                 <Route
                     path="/"
-                    element={<Navigate to="/login" replace />}
+                    element={<LandingPage />}
                 />
 
                 <Route
