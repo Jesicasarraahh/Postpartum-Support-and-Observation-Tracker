@@ -11,6 +11,7 @@ public class TrustedCircleMemberResponse {
     private String email;
     private String relationship;
     private LocalDateTime createdAt;
+    private boolean active;
 
     public TrustedCircleMemberResponse(
             TrustedCircleMember member) {
@@ -20,6 +21,7 @@ public class TrustedCircleMemberResponse {
         this.email = member.getEmail();
         this.relationship = member.getRelationship();
         this.createdAt = member.getCreatedAt();
+        this.active = member.isActive();
     }
 
     public Long getId() {
@@ -40,5 +42,13 @@ public class TrustedCircleMemberResponse {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

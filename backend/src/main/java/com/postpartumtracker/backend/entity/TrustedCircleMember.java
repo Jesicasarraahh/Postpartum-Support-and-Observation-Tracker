@@ -13,11 +13,9 @@ public class TrustedCircleMember {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "postpartum_profile_id",
-            nullable = false
-    )
+    @JoinColumn(name = "postpartum_profile_id", nullable = false)
     private PostpartumProfile postpartumProfile;
+    
 
     @Column(nullable = false)
     private String name;
@@ -27,6 +25,8 @@ public class TrustedCircleMember {
 
     @Column(nullable = false)
     private String relationship;
+
+    private boolean active = true;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -79,5 +79,13 @@ public class TrustedCircleMember {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

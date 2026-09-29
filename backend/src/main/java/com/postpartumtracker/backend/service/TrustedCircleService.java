@@ -146,4 +146,64 @@ public class TrustedCircleService {
     return inviteToken
             .getTrustedCircleMember();
 }
+@Transactional
+public void revokeMemberAccess(
+    Long profileId,
+    Long memberId,
+    String email
+) {
+
+    User user =
+        userRepository
+            .findByEmail(email)
+            .orElseThrow(
+                () -> new IllegalArgumentException(
+                    "User not found."
+                )
+            );
+
+    PostpartumProfile profile =
+        postpartumProfileRepository
+            .findById(profileId)
+            .orElseThrow(
+                () -> new IllegalArgumentException(
+                    "Postpartum profile not found."
+                )
+            );
+
+    if (
+        !profile.getOwner()
+            .getId()
+            .equals(user.getId())
+    ) {
+
+        throw new IllegalArgumentException(
+            "You do not own this postpartum profile."
+        );
+    }
+
+    TrustedCircleMember member =
+        trustedCircleMemberRepository
+            .findById(memberId)
+            .orElseThrow(
+                () -> new IllegalArgumentException(
+                    "Trusted circle member not found."
+                )
+            );
+
+    if (
+        !member.getPostpartumProfile()
+            .getId()
+            .equals(profileId)
+    ) {
+
+        throw new IllegalArgumentException(
+            "This trusted-circle member does not belong to this profile."
+        );
+    }
+
+    member.setActive(false);
+
+    trustedCircleMemberRepository.save(member);
+}
 }
