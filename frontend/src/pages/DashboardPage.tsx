@@ -64,39 +64,53 @@ function DashboardPage() {
     }, []);
 
     function handleLogout() {
+
         removeToken();
+
         navigate("/login");
     }
 
     async function handleDeleteAccount() {
-    const confirmed = window.confirm(
-        "Are you sure you want to permanently delete your account? This cannot be undone."
-    );
-    if (!confirmed) {
-        return;
-    }
-    try {
-        const response =
-            await apiRequest(
-                "/api/users/me",
-                {
-                    method: "DELETE"
-                }
+
+        const confirmed =
+            window.confirm(
+                "Are you sure you want to permanently delete your account? This cannot be undone."
             );
-        if (!response.ok) {
-            alert(
-                "Could not delete your account."
-            );
+
+        if (!confirmed) {
             return;
         }
-        removeToken();
-        navigate("/");
-    } catch {
-        alert(
-            "Something went wrong while deleting your account."
-        );
+
+        try {
+
+            const response =
+                await apiRequest(
+                    "/api/users/me",
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+            if (!response.ok) {
+
+                alert(
+                    "Could not delete your account."
+                );
+
+                return;
+            }
+
+            removeToken();
+
+            navigate("/");
+
+        } catch {
+
+            alert(
+                "Something went wrong while deleting your account."
+            );
+        }
     }
-}
 
     if (loading) {
         return <p>Loading...</p>;
@@ -106,9 +120,13 @@ function DashboardPage() {
         <div>
 
             <header>
-                <h1>Postpartum Support Tracker</h1>
+
+                <h1>
+                    Postpartum Support Tracker
+                </h1>
 
                 <nav>
+
                     <Link to="/dashboard">
                         Home
                     </Link>
@@ -118,10 +136,10 @@ function DashboardPage() {
                     <button onClick={handleLogout}>
                         Log Out
                     </button>
-                </nav>
-            </header>
 
-            <hr />
+                </nav>
+
+            </header>
 
             <main>
 
@@ -136,15 +154,16 @@ function DashboardPage() {
                     Your postpartum support space.
                 </p>
 
-                <hr />
-
                 <section>
 
-                    <h2>Your Postpartum Profile</h2>
+                    <h2>
+                        Your Postpartum Profile
+                    </h2>
 
                     {profiles.length === 0 ? (
 
                         <div>
+
                             <p>
                                 You have not created a
                                 postpartum profile yet.
@@ -153,6 +172,7 @@ function DashboardPage() {
                             <Link to="/profile/setup">
                                 Create Postpartum Profile
                             </Link>
+
                         </div>
 
                     ) : (
@@ -171,17 +191,50 @@ function DashboardPage() {
                             >
                                 New Check-In
                             </Link>
+
                             <br />
                             <br />
 
-                             <Link
-                               to={`/check-ins/${profiles[0].id}`}
-                             >
-                              View Check-In History
-                             </Link>
+                            <Link
+                                to={
+                                    `/check-ins/${profiles[0].id}`
+                                }
+                            >
+                                View Check-In History
+                            </Link>
 
                         </div>
                     )}
+
+                </section>
+
+
+                <section className="danger-zone">
+
+                    <div>
+
+                        <p className="danger-label">
+                            ACCOUNT
+                        </p>
+
+                        <h2>
+                            Delete your account
+                        </h2>
+
+                        <p>
+                            Permanently delete your account,
+                            postpartum profile, and check-in data.
+                            This action cannot be undone.
+                        </p>
+
+                    </div>
+
+                    <button
+                        className="delete-account-button"
+                        onClick={handleDeleteAccount}
+                    >
+                        Delete Account
+                    </button>
 
                 </section>
 
@@ -189,35 +242,6 @@ function DashboardPage() {
 
         </div>
     );
-    <section className="danger-zone">
-
-    <div>
-
-        <p className="danger-label">
-            ACCOUNT
-        </p>
-
-        <h2>
-            Delete your account
-        </h2>
-
-        <p>
-            Permanently delete your account,
-            postpartum profile, and check-in data.
-            This action cannot be undone.
-        </p>
-
-    </div>
-
-    <button
-        className="delete-account-button"
-        onClick={handleDeleteAccount}
-    >
-        Delete Account
-    </button>
-
-</section>
-
 }
 
 export default DashboardPage;
