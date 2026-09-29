@@ -1,15 +1,28 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { useSearchParams } from "react-router-dom";
 
-import { apiRequest } from "../services/api";
+import {
+    useSearchParams
+} from "react-router-dom";
+
+import {
+    apiRequest
+} from "../services/api";
+
+import "../styles/trustedAccess.css";
+
 
 type TrustedAccess = {
+
     trustedCircleMemberId: number;
+
     name: string;
+
     relationship: string;
+
     postpartumProfileId: number;
 };
+
 
 function TrustedAccessPage() {
 
@@ -28,7 +41,10 @@ function TrustedAccessPage() {
     const [description, setDescription] =
         useState("");
 
-    const [observerConcerned, setObserverConcerned] =
+    const [
+        observerConcerned,
+        setObserverConcerned
+    ] =
         useState(false);
 
     const [observedAt, setObservedAt] =
@@ -78,8 +94,9 @@ function TrustedAccessPage() {
                     return;
                 }
 
-                const data: TrustedAccess =
-                    await response.json();
+                const data:
+                    TrustedAccess =
+                        await response.json();
 
                 setAccess(data);
 
@@ -123,9 +140,13 @@ function TrustedAccessPage() {
                         method: "POST",
 
                         body: JSON.stringify({
+
                             category,
+
                             description,
+
                             observerConcerned,
+
                             observedAt:
                                 observedAt.length === 16
                                     ? `${observedAt}:00`
@@ -144,8 +165,11 @@ function TrustedAccessPage() {
             }
 
             setCategory("");
+
             setDescription("");
+
             setObserverConcerned(false);
+
             setObservedAt("");
 
             setMessage(
@@ -168,9 +192,9 @@ function TrustedAccessPage() {
     if (loading) {
 
         return (
-            <p>
-                Opening trusted-circle invitation...
-            </p>
+            <div className="trusted-access-loading">
+                Opening your trusted-circle invitation...
+            </div>
         );
     }
 
@@ -178,15 +202,31 @@ function TrustedAccessPage() {
     if (error && !access) {
 
         return (
-            <div>
+            <div className="trusted-access-page">
 
-                <h1>
-                    Trusted Circle
-                </h1>
+                <div className="trusted-access-container">
 
-                <p>
-                    {error}
-                </p>
+                    <section className="trusted-access-invalid">
+
+                        <div className="invalid-icon">
+                            !
+                        </div>
+
+                        <p className="trusted-access-eyebrow">
+                            TRUSTED CIRCLE
+                        </p>
+
+                        <h1>
+                            This link could not be opened
+                        </h1>
+
+                        <p>
+                            {error}
+                        </p>
+
+                    </section>
+
+                </div>
 
             </div>
         );
@@ -194,195 +234,313 @@ function TrustedAccessPage() {
 
 
     return (
-        <div>
+        <div className="trusted-access-page">
 
-            <h1>
-                Trusted Circle Observation
-            </h1>
+            <div className="trusted-access-container">
 
-            {access && (
 
-                <div>
+                {/* BRAND */}
 
-                    <p>
-                        Welcome,{" "}
-                        <strong>
-                            {access.name}
-                        </strong>
+                <header className="trusted-access-header">
+
+                    <p className="trusted-access-brand">
+                        Postpartum Support Tracker
                     </p>
 
-                    <p>
-                        Relationship:{" "}
-                        {access.relationship}
-                    </p>
+                    <div className="trusted-access-heading">
 
-                </div>
-            )}
+                        <p className="trusted-access-eyebrow">
+                            TRUSTED CIRCLE
+                        </p>
+
+                        <h1>
+                            Share an Observation
+                        </h1>
+
+                        <p>
+                            Record something you personally observed
+                            to help create a clearer picture over time.
+                        </p>
+
+                    </div>
+
+                </header>
 
 
-            <p>
-                Use this form to record something
-                you personally observed.
-            </p>
+                {/* SUPPORTER CARD */}
+
+                {access && (
+
+                    <section className="supporter-card">
+
+                        <div className="supporter-avatar">
+                            {access.name
+                                .charAt(0)
+                                .toUpperCase()}
+                        </div>
+
+                        <div className="supporter-details">
+
+                            <p className="supporter-label">
+                                YOU'RE SUPPORTING AS
+                            </p>
+
+                            <h2>
+                                Welcome, {access.name}
+                            </h2>
+
+                            <span className="supporter-relationship">
+                                {access.relationship}
+                            </span>
+
+                        </div>
+
+                        <div className="supporter-heart">
+                            ♡
+                        </div>
+
+                    </section>
+
+                )}
 
 
-            <form onSubmit={handleSubmit}>
+                {/* GUIDANCE */}
 
-                <div>
+                <section className="trusted-guidance-card">
 
-                    <label>
-                        Observation Category
-                    </label>
+                    <div className="guidance-icon">
+                        ✦
+                    </div>
 
-                    <br />
+                    <div>
 
-                    <select
-                        value={category}
-                        onChange={(event) =>
-                            setCategory(
-                                event.target.value
-                            )
-                        }
-                        required
+                        <h3>
+                            Keep your observation factual
+                        </h3>
+
+                        <p>
+                            Record only what you personally noticed.
+                            This space is for sharing observations,
+                            not diagnosing or interpreting what they mean.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                {/* FORM */}
+
+                <section className="trusted-observation-card">
+
+                    <div className="observation-card-heading">
+
+                        <p className="trusted-access-eyebrow">
+                            NEW OBSERVATION
+                        </p>
+
+                        <h2>
+                            What did you notice?
+                        </h2>
+
+                        <p>
+                            Add the details below as clearly
+                            and simply as you can.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        className="trusted-observation-form"
+                        onSubmit={handleSubmit}
                     >
 
-                        <option value="">
-                            Select category
-                        </option>
 
-                        <option value="Mood / Behavior">
-                            Mood / Behavior
-                        </option>
+                        {/* CATEGORY */}
 
-                        <option value="Sleep">
-                            Sleep
-                        </option>
+                        <div className="trusted-access-field">
 
-                        <option value="Eating / Appetite">
-                            Eating / Appetite
-                        </option>
+                            <label htmlFor="observationCategory">
+                                Observation Category
+                            </label>
 
-                        <option value="Medication">
-                            Medication
-                        </option>
+                            <select
+                                id="observationCategory"
+                                value={category}
+                                onChange={(event) =>
+                                    setCategory(
+                                        event.target.value
+                                    )
+                                }
+                                required
+                            >
 
-                        <option value="Communication">
-                            Communication
-                        </option>
+                                <option value="">
+                                    Select category
+                                </option>
 
-                        <option value="Physical Wellbeing">
-                            Physical Wellbeing
-                        </option>
+                                <option value="Mood / Behavior">
+                                    Mood / Behavior
+                                </option>
 
-                        <option value="Other">
-                            Other
-                        </option>
+                                <option value="Sleep">
+                                    Sleep
+                                </option>
 
-                    </select>
+                                <option value="Eating / Appetite">
+                                    Eating / Appetite
+                                </option>
 
-                </div>
+                                <option value="Medication">
+                                    Medication
+                                </option>
 
+                                <option value="Communication">
+                                    Communication
+                                </option>
 
-                <br />
+                                <option value="Physical Wellbeing">
+                                    Physical Wellbeing
+                                </option>
 
+                                <option value="Other">
+                                    Other
+                                </option>
 
-                <div>
+                            </select>
 
-                    <label>
-                        What did you observe?
-                    </label>
-
-                    <br />
-
-                    <textarea
-                        rows={6}
-                        cols={45}
-                        value={description}
-                        onChange={(event) =>
-                            setDescription(
-                                event.target.value
-                            )
-                        }
-                        placeholder="Describe only what you personally observed..."
-                        required
-                    />
-
-                </div>
+                        </div>
 
 
-                <br />
+                        {/* DESCRIPTION */}
+
+                        <div className="trusted-access-field">
+
+                            <label htmlFor="observationDescription">
+                                What did you observe?
+                            </label>
+
+                            <textarea
+                                id="observationDescription"
+                                rows={6}
+                                value={description}
+                                onChange={(event) =>
+                                    setDescription(
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Describe only what you personally observed..."
+                                required
+                            />
+
+                        </div>
 
 
-                <div>
+                        {/* DATE */}
 
-                    <label>
-                        When did you observe this?
-                    </label>
+                        <div className="trusted-access-field">
 
-                    <br />
+                            <label htmlFor="observedAt">
+                                When did you observe this?
+                            </label>
 
-                    <input
-                        type="datetime-local"
-                        value={observedAt}
-                        onChange={(event) =>
-                            setObservedAt(
-                                event.target.value
-                            )
-                        }
-                        required
-                    />
+                            <input
+                                id="observedAt"
+                                type="datetime-local"
+                                value={observedAt}
+                                onChange={(event) =>
+                                    setObservedAt(
+                                        event.target.value
+                                    )
+                                }
+                                required
+                            />
 
-                </div>
-
-
-                <br />
+                        </div>
 
 
-                <label>
+                        {/* CONCERN */}
 
-                    <input
-                        type="checkbox"
-                        checked={observerConcerned}
-                        onChange={(event) =>
-                            setObserverConcerned(
-                                event.target.checked
-                            )
-                        }
-                    />
+                        <label
+                            className={
+                                observerConcerned
+                                    ? "concern-box concern-box-selected"
+                                    : "concern-box"
+                            }
+                        >
 
-                    {" "}
-                    I am concerned about this observation
+                            <input
+                                type="checkbox"
+                                checked={observerConcerned}
+                                onChange={(event) =>
+                                    setObserverConcerned(
+                                        event.target.checked
+                                    )
+                                }
+                            />
 
-                </label>
+                            <div className="concern-box-content">
+
+                                <strong>
+                                    I am concerned about this observation
+                                </strong>
+
+                                <span>
+                                    Select this if what you observed
+                                    caused you concern.
+                                </span>
+
+                            </div>
+
+                        </label>
 
 
-                <br />
-                <br />
+                        {/* MESSAGES */}
+
+                        {message && (
+
+                            <div className="trusted-access-success">
+                                {message}
+                            </div>
+
+                        )}
 
 
-                <button
-                    type="submit"
-                    disabled={saving}
-                >
-                    {saving
-                        ? "Submitting..."
-                        : "Submit Observation"}
-                </button>
+                        {error && (
 
-            </form>
+                            <div className="trusted-access-error">
+                                {error}
+                            </div>
+
+                        )}
 
 
-            {message && (
-                <p>
-                    {message}
+                        <button
+                            type="submit"
+                            className="trusted-observation-submit"
+                            disabled={saving}
+                        >
+                            {saving
+                                ? "Submitting..."
+                                : "Submit Observation"}
+                        </button>
+
+
+                    </form>
+
+                </section>
+
+
+                {/* FOOTER NOTE */}
+
+                <p className="trusted-access-footer-note">
+                    Your observation will be added to the
+                    postpartum timeline with your name and relationship.
                 </p>
-            )}
 
-            {error && (
-                <p>
-                    {error}
-                </p>
-            )}
+
+            </div>
 
         </div>
     );

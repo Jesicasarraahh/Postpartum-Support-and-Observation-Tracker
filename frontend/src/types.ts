@@ -29,3 +29,24 @@ export type TrustedCircleMember = {
     relationship: string;
     createdAt: string;
 };
+export type TimelineItem = {
+    type: "MOTHER_CHECK_IN" | "TRUSTED_OBSERVATION";
+
+    timestamp: string;
+
+    sourceName: string | null;
+    relationship: string | null;
+
+    sleepHours: number | null;
+    medicationStatus: string | null;
+
+    moods: string[] | null;
+    physicalFeelings: string[] | null;
+
+    notes: string | null;
+
+    category: string | null;
+    description: string | null;
+
+    observerConcerned: boolean | null;
+};

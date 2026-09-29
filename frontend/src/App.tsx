@@ -33,6 +33,9 @@ import TrustedCirclePage
 import TrustedAccessPage
     from "./pages/TrustedAccessPage";
 
+import TimelinePage
+    from "./pages/TimelinePage";
+
 function App() {
 
     return (
@@ -112,6 +115,14 @@ function App() {
                 <Route
                     path="/trusted-access"
                     element={<TrustedAccessPage />}
+                />
+                <Route
+                    path="/timeline/:profileId"
+                    element={
+                        <ProtectedRoute>
+                            <TimelinePage />
+                        </ProtectedRoute>
+                    }
                 />
 
             </Routes>

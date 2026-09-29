@@ -1,14 +1,39 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+
+import {
+    Link,
+    useNavigate,
+    useParams
+} from "react-router-dom";
 
 import { apiRequest } from "../services/api";
-import type { CheckIn } from "../types";
+
+import type {
+    CheckIn
+} from "../types";
+
+import "../styles/checkInHistory.css";
+
+
+function formatLabel(value: string) {
+
+    return value
+        .replaceAll("_", " ")
+        .toLowerCase()
+        .replace(
+            /\b\w/g,
+            letter => letter.toUpperCase()
+        );
+}
+
 
 function CheckInHistoryPage() {
 
-    const { profileId } = useParams();
+    const { profileId } =
+        useParams();
 
-    const navigate = useNavigate();
+    const navigate =
+        useNavigate();
 
     const [checkIns, setCheckIns] =
         useState<CheckIn[]>([]);
@@ -19,11 +44,13 @@ function CheckInHistoryPage() {
     const [error, setError] =
         useState("");
 
+
     useEffect(() => {
 
         async function loadCheckIns() {
 
             if (!profileId) {
+
                 setError(
                     "Postpartum profile was not found."
                 );
@@ -49,15 +76,16 @@ function CheckInHistoryPage() {
                     return;
                 }
 
-                const data: CheckIn[] =
-                    await response.json();
+                const data:
+                    CheckIn[] =
+                        await response.json();
 
                 setCheckIns(data);
 
             } catch {
 
                 setError(
-                    "Something went wrong while loading check-ins."
+                    "Something went wrong while loading your check-ins."
                 );
 
             } finally {
@@ -70,122 +98,312 @@ function CheckInHistoryPage() {
 
     }, [profileId]);
 
+
     if (loading) {
-        return <p>Loading check-ins...</p>;
+
+        return (
+            <div className="history-loading">
+                Loading your check-ins...
+            </div>
+        );
     }
 
+
     return (
-        <div>
+        <div className="history-page">
 
-            <h1>Check-In History</h1>
+            <div className="history-container">
 
-            <button
-                onClick={() =>
-                    navigate("/dashboard")
-                }
-            >
-                Back to Dashboard
-            </button>
 
-            <br />
-            <br />
+                {/* HEADER */}
 
-            {error && (
-                <p>{error}</p>
-            )}
+                <header className="history-header">
 
-            {checkIns.length === 0 && !error ? (
-
-                <div>
-
-                    <p>
-                        You have not completed any
-                        check-ins yet.
-                    </p>
-
-                    <Link
-                        to={`/check-in/${profileId}`}
+                    <button
+                        className="history-back-button"
+                        onClick={() =>
+                            navigate("/dashboard")
+                        }
                     >
-                        Complete Your First Check-In
-                    </Link>
+                        ← Back
+                    </button>
 
-                </div>
 
-            ) : (
+                    <div className="history-heading">
 
-                <div>
+                        <p className="history-eyebrow">
+                            YOUR JOURNEY
+                        </p>
 
-                    {checkIns.map(checkIn => (
+                        <h1>
+                            Check-In History
+                        </h1>
 
-                        <div
-                            key={checkIn.id}
-                            style={{
-                                border: "1px solid #ccc",
-                                padding: "15px",
-                                marginBottom: "15px"
-                            }}
-                        >
+                        <p>
+                            Look back at how you've been
+                            feeling and the moments you've
+                            chosen to record.
+                        </p>
 
-                            <h2>
-                                {new Date(
-                                    checkIn.createdAt
-                                ).toLocaleString()}
-                            </h2>
+                    </div>
 
-                            <p>
-                                <strong>
-                                    Sleep:
-                                </strong>
-                                {" "}
-                                {checkIn.sleepHours !== null
-                                    ? `${checkIn.sleepHours} hours`
-                                    : "Not entered"}
-                            </p>
+                </header>
 
-                            <p>
-                                <strong>
-                                    Medication:
-                                </strong>
-                                {" "}
-                                {checkIn.medicationStatus}
-                            </p>
 
-                            <p>
-                                <strong>
-                                    Moods:
-                                </strong>
-                                {" "}
-                                {checkIn.moods.length > 0
-                                    ? checkIn.moods.join(", ")
-                                    : "None selected"}
-                            </p>
+                {/* ERROR */}
 
-                            <p>
-                                <strong>
-                                    Physical feelings:
-                                </strong>
-                                {" "}
-                                {checkIn.physicalFeelings.length > 0
-                                    ? checkIn.physicalFeelings.join(", ")
-                                    : "None selected"}
-                            </p>
+                {error && (
 
-                            <p>
-                                <strong>
-                                    Notes:
-                                </strong>
-                                {" "}
-                                {checkIn.notes
-                                    ? checkIn.notes
-                                    : "No notes"}
-                            </p>
+                    <div className="history-error">
+                        {error}
+                    </div>
 
+                )}
+
+
+                {/* EMPTY STATE */}
+
+                {!error &&
+                checkIns.length === 0 && (
+
+                    <section className="history-empty">
+
+                        <div className="history-empty-icon">
+                            ♡
                         </div>
 
-                    ))}
+                        <h2>
+                            No check-ins yet
+                        </h2>
 
-                </div>
-            )}
+                        <p>
+                            Your completed check-ins will
+                            appear here once you begin
+                            recording your postpartum journey.
+                        </p>
+
+                        <Link
+                            to={`/check-in/${profileId}`}
+                            className="history-new-button"
+                        >
+                            Complete Your First Check-In
+                        </Link>
+
+                    </section>
+
+                )}
+
+
+                {/* HISTORY */}
+
+                {checkIns.length > 0 && (
+
+                    <div className="history-list">
+
+                        {checkIns.map(
+                            (checkIn, index) => {
+
+                                const date =
+                                    new Date(
+                                        checkIn.createdAt
+                                    );
+
+                                return (
+
+                                    <article
+                                        key={checkIn.id}
+                                        className={
+                                            index % 3 === 0
+                                                ? "history-card history-pink"
+                                                : index % 3 === 1
+                                                    ? "history-card history-peach"
+                                                    : "history-card history-lavender"
+                                        }
+                                    >
+
+                                        <div className="history-card-header">
+
+                                            <div>
+
+                                                <p className="history-card-label">
+                                                    CHECK-IN
+                                                </p>
+
+                                                <h2>
+                                                    {date.toLocaleDateString(
+                                                        undefined,
+                                                        {
+                                                            month: "long",
+                                                            day: "numeric",
+                                                            year: "numeric"
+                                                        }
+                                                    )}
+                                                </h2>
+
+                                            </div>
+
+                                            <div className="history-time">
+                                                {date.toLocaleTimeString(
+                                                    [],
+                                                    {
+                                                        hour: "numeric",
+                                                        minute: "2-digit"
+                                                    }
+                                                )}
+                                            </div>
+
+                                        </div>
+
+
+                                        {/* QUICK STATS */}
+
+                                        <div className="history-stats">
+
+                                            <div className="history-stat">
+
+                                                <span className="history-stat-label">
+                                                    Sleep
+                                                </span>
+
+                                                <strong>
+                                                    {checkIn.sleepHours !== null
+                                                        ? `${checkIn.sleepHours} hrs`
+                                                        : "Not entered"}
+                                                </strong>
+
+                                            </div>
+
+
+                                            <div className="history-stat">
+
+                                                <span className="history-stat-label">
+                                                    Medication
+                                                </span>
+
+                                                <strong>
+                                                    {checkIn.medicationStatus
+                                                        ? formatLabel(
+                                                            checkIn.medicationStatus
+                                                        )
+                                                        : "Not entered"}
+                                                </strong>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        {/* MOODS */}
+
+                                        <div className="history-section">
+
+                                            <h3>
+                                                Mood
+                                            </h3>
+
+                                            <div className="history-tags">
+
+                                                {checkIn.moods &&
+                                                checkIn.moods.length > 0 ? (
+
+                                                    checkIn.moods.map(
+                                                        mood => (
+
+                                                            <span
+                                                                key={mood}
+                                                                className="history-tag mood-tag"
+                                                            >
+                                                                {formatLabel(
+                                                                    mood
+                                                                )}
+                                                            </span>
+
+                                                        )
+                                                    )
+
+                                                ) : (
+
+                                                    <span className="history-none">
+                                                        None selected
+                                                    </span>
+
+                                                )}
+
+                                            </div>
+
+                                        </div>
+
+
+                                        {/* PHYSICAL FEELINGS */}
+
+                                        <div className="history-section">
+
+                                            <h3>
+                                                Physical Feelings
+                                            </h3>
+
+                                            <div className="history-tags">
+
+                                                {checkIn.physicalFeelings &&
+                                                checkIn.physicalFeelings.length > 0 ? (
+
+                                                    checkIn
+                                                        .physicalFeelings
+                                                        .map(
+                                                            feeling => (
+
+                                                                <span
+                                                                    key={feeling}
+                                                                    className="history-tag physical-tag"
+                                                                >
+                                                                    {formatLabel(
+                                                                        feeling
+                                                                    )}
+                                                                </span>
+
+                                                            )
+                                                        )
+
+                                                ) : (
+
+                                                    <span className="history-none">
+                                                        None selected
+                                                    </span>
+
+                                                )}
+
+                                            </div>
+
+                                        </div>
+
+
+                                        {/* NOTES */}
+
+                                        <div className="history-notes">
+
+                                            <p className="history-notes-label">
+                                                NOTES
+                                            </p>
+
+                                            <p>
+                                                {checkIn.notes
+                                                    ? checkIn.notes
+                                                    : "No notes added for this check-in."}
+                                            </p>
+
+                                        </div>
+
+                                    </article>
+
+                                );
+                            }
+                        )}
+
+                    </div>
+
+                )}
+
+            </div>
 
         </div>
     );

@@ -9,6 +9,8 @@ import type {
     PostpartumProfile
 } from "../types";
 
+import "../styles/dashboard.css";
+
 function DashboardPage() {
 
     const navigate = useNavigate();
@@ -22,6 +24,7 @@ function DashboardPage() {
     const [loading, setLoading] =
         useState(true);
 
+
     async function loadDashboard() {
 
         try {
@@ -30,8 +33,11 @@ function DashboardPage() {
                 await apiRequest("/api/users/me");
 
             if (!userResponse.ok) {
+
                 removeToken();
+
                 navigate("/login");
+
                 return;
             }
 
@@ -39,6 +45,7 @@ function DashboardPage() {
                 await userResponse.json();
 
             setUser(userData);
+
 
             const profileResponse =
                 await apiRequest(
@@ -55,13 +62,16 @@ function DashboardPage() {
             }
 
         } finally {
+
             setLoading(false);
         }
     }
 
+
     useEffect(() => {
         loadDashboard();
     }, []);
+
 
     function handleLogout() {
 
@@ -69,6 +79,7 @@ function DashboardPage() {
 
         navigate("/login");
     }
+
 
     async function handleDeleteAccount() {
 
@@ -112,120 +123,319 @@ function DashboardPage() {
         }
     }
 
+
     if (loading) {
-        return <p>Loading...</p>;
+
+        return (
+            <div className="dashboard-loading">
+                Loading your support space...
+            </div>
+        );
     }
 
+
+    const profile =
+        profiles.length > 0
+            ? profiles[0]
+            : null;
+
+
     return (
-        <div>
+        <div className="dashboard-page">
 
-            <header>
+            <div className="dashboard-container">
 
-                <h1>
-                    Postpartum Support Tracker
-                </h1>
 
-                <nav>
+                {/* TOP NAV */}
 
-                    <Link to="/dashboard">
-                        Home
+                <header className="dashboard-topbar">
+
+                    <Link
+                        to="/"
+                        className="dashboard-brand"
+                    >
+                        Postpartum Support Tracker
                     </Link>
 
-                    {" | "}
 
-                    <button onClick={handleLogout}>
-                        Log Out
-                    </button>
+                    <div className="dashboard-top-actions">
 
-                </nav>
+                        <Link
+                            to="/dashboard"
+                            className="dashboard-home-link"
+                        >
+                            Home
+                        </Link>
 
-            </header>
+                        <button
+                            className="logout-button"
+                            onClick={handleLogout}
+                        >
+                            Log Out
+                        </button>
 
-            <main>
+                    </div>
 
-                <h2>
-                    Welcome
-                    {user
-                        ? `, ${user.firstName}`
-                        : ""}
-                </h2>
+                </header>
 
-                <p>
-                    Your postpartum support space.
-                </p>
 
-                <section>
+                {/* WELCOME */}
 
-                    <h2>
-                        Your Postpartum Profile
-                    </h2>
+                <section className="dashboard-welcome">
 
-                    {profiles.length === 0 ? (
+                    <p className="dashboard-eyebrow">
+                        YOUR SUPPORT SPACE
+                    </p>
 
-                        <div>
+                    <h1>
+                        Hi
+                        {user
+                            ? `, ${user.firstName}`
+                            : ""}
+                        {" "}♡
+                    </h1>
 
-                            <p>
-                                You have not created a
-                                postpartum profile yet.
-                            </p>
-
-                            <Link to="/profile/setup">
-                                Create Postpartum Profile
-                            </Link>
-
-                        </div>
-
-                    ) : (
-
-                        <div>
-
-                            <p>
-                                Delivery date:{" "}
-                                {profiles[0].deliveryDate}
-                            </p>
-
-                            <Link
-                                to={
-                                    `/check-in/${profiles[0].id}`
-                                }
-                            >
-                                New Check-In
-                            </Link>
-
-                            <br />
-                            <br />
-
-                            <Link
-                                to={
-                                    `/check-ins/${profiles[0].id}`
-                                }
-                            >
-                                View Check-In History
-                            </Link>
-
-                            <br />
-                            <br />
-
-                            <Link
-                                to={
-                                    `/trusted-circle/${profiles[0].id}`
-                                }
-                            >
-                                Manage Trusted Circle
-                            </Link>
-
-                        </div>
-                    )}
+                    <p>
+                        Take a moment for yourself,
+                        review your journey, and stay
+                        connected with the people you trust.
+                    </p>
 
                 </section>
 
 
-                <section className="danger-zone">
+                {/* PROFILE */}
+
+                {!profile ? (
+
+                    <section className="profile-card">
+
+                        <div>
+
+                            <p className="section-label">
+                                GET STARTED
+                            </p>
+
+                            <h2>
+                                Create your postpartum profile
+                            </h2>
+
+                            <p>
+                                Add your delivery date to begin
+                                tracking check-ins and building
+                                your support timeline.
+                            </p>
+
+                        </div>
+
+                        <Link
+                            to="/profile/setup"
+                            className="primary-action-button"
+                        >
+                            Create Profile
+                        </Link>
+
+                    </section>
+
+                ) : (
+
+                    <>
+
+                        <section className="profile-card">
+
+                            <div>
+
+                                <p className="section-label">
+                                    YOUR PROFILE
+                                </p>
+
+                                <h2>
+                                    Your Postpartum Journey
+                                </h2>
+
+                                <p className="profile-date-label">
+                                    Delivery Date
+                                </p>
+
+                                <p className="profile-date">
+                                    {new Date(
+                                        profile.deliveryDate
+                                        + "T00:00:00"
+                                    ).toLocaleDateString(
+                                        undefined,
+                                        {
+                                            month: "long",
+                                            day: "numeric",
+                                            year: "numeric"
+                                        }
+                                    )}
+                                </p>
+
+                            </div>
+
+                            <div className="profile-heart">
+                                ♡
+                            </div>
+
+                        </section>
+
+
+                        {/* MAIN ACTIONS */}
+
+                        <section className="dashboard-actions-section">
+
+                            <div className="section-heading">
+
+                                <p className="section-label">
+                                    YOUR TOOLS
+                                </p>
+
+                                <h2>
+                                    What would you like to do?
+                                </h2>
+
+                            </div>
+
+
+                            <div className="dashboard-action-grid">
+
+
+                                <Link
+                                    to={`/check-in/${profile.id}`}
+                                    className="action-card pink-card"
+                                >
+
+                                    <div className="action-icon">
+                                        ♡
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            New Check-In
+                                        </h3>
+
+                                        <p>
+                                            Record your mood,
+                                            sleep, medication,
+                                            physical feelings,
+                                            and notes.
+                                        </p>
+
+                                    </div>
+
+                                    <span className="action-arrow">
+                                        →
+                                    </span>
+
+                                </Link>
+
+
+                                <Link
+                                    to={`/check-ins/${profile.id}`}
+                                    className="action-card peach-card"
+                                >
+
+                                    <div className="action-icon">
+                                        ◷
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Check-In History
+                                        </h3>
+
+                                        <p>
+                                            Look back at your
+                                            previous check-ins
+                                            and how you've felt.
+                                        </p>
+
+                                    </div>
+
+                                    <span className="action-arrow">
+                                        →
+                                    </span>
+
+                                </Link>
+
+
+                                <Link
+                                    to={`/trusted-circle/${profile.id}`}
+                                    className="action-card lavender-card"
+                                >
+
+                                    <div className="action-icon">
+                                        ◌
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Trusted Circle
+                                        </h3>
+
+                                        <p>
+                                            Manage the people
+                                            you've invited to
+                                            support your journey.
+                                        </p>
+
+                                    </div>
+
+                                    <span className="action-arrow">
+                                        →
+                                    </span>
+
+                                </Link>
+
+
+                                <Link
+                                    to={`/timeline/${profile.id}`}
+                                    className="action-card sage-card"
+                                >
+
+                                    <div className="action-icon">
+                                        ✦
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            Combined Timeline
+                                        </h3>
+
+                                        <p>
+                                            See your check-ins
+                                            and trusted-circle
+                                            observations together.
+                                        </p>
+
+                                    </div>
+
+                                    <span className="action-arrow">
+                                        →
+                                    </span>
+
+                                </Link>
+
+                            </div>
+
+                        </section>
+
+                    </>
+                )}
+
+
+                {/* DELETE ACCOUNT */}
+
+                <section className="account-section">
 
                     <div>
 
                         <p className="danger-label">
-                            ACCOUNT
+                            ACCOUNT SETTINGS
                         </p>
 
                         <h2>
@@ -234,7 +444,8 @@ function DashboardPage() {
 
                         <p>
                             Permanently delete your account,
-                            postpartum profile, and check-in data.
+                            postpartum profile, check-ins,
+                            trusted circle, and related data.
                             This action cannot be undone.
                         </p>
 
@@ -249,7 +460,8 @@ function DashboardPage() {
 
                 </section>
 
-            </main>
+
+            </div>
 
         </div>
     );

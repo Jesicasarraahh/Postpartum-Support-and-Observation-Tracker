@@ -1,10 +1,5 @@
-import {
-    useState
-} from "react";
-
-import type {
-    FormEvent
-} from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 
 import {
     useNavigate,
@@ -14,6 +9,9 @@ import {
 import {
     apiRequest
 } from "../services/api";
+
+import "../styles/newCheckIn.css";
+
 
 const moodOptions = [
     "HAPPY",
@@ -28,6 +26,7 @@ const moodOptions = [
     "RESTLESS"
 ];
 
+
 const physicalFeelingOptions = [
     "TIRED",
     "BLOATED",
@@ -36,6 +35,19 @@ const physicalFeelingOptions = [
     "LOW_APPETITE",
     "BODY_DISCOMFORT"
 ];
+
+
+function formatLabel(value: string) {
+
+    return value
+        .replaceAll("_", " ")
+        .toLowerCase()
+        .replace(
+            /\b\w/g,
+            letter => letter.toUpperCase()
+        );
+}
+
 
 function NewCheckInPage() {
 
@@ -69,6 +81,7 @@ function NewCheckInPage() {
     const [saving, setSaving] =
         useState(false);
 
+
     function toggleMood(mood: string) {
 
         if (moods.includes(mood)) {
@@ -87,6 +100,7 @@ function NewCheckInPage() {
             ]);
         }
     }
+
 
     function togglePhysicalFeeling(
         feeling: string
@@ -114,6 +128,7 @@ function NewCheckInPage() {
         }
     }
 
+
     async function handleSubmit(
         event: FormEvent
     ) {
@@ -121,9 +136,11 @@ function NewCheckInPage() {
         event.preventDefault();
 
         if (!profileId) {
+
             setError(
                 "Postpartum profile was not found."
             );
+
             return;
         }
 
@@ -139,6 +156,7 @@ function NewCheckInPage() {
                         method: "POST",
 
                         body: JSON.stringify({
+
                             sleepHours:
                                 sleepHours === ""
                                     ? null
@@ -169,196 +187,379 @@ function NewCheckInPage() {
             navigate("/dashboard");
 
         } finally {
+
             setSaving(false);
         }
     }
 
+
     return (
-        <div>
+        <div className="checkin-page">
 
-            <h1>New Check-In</h1>
+            <div className="checkin-container">
 
-            <form onSubmit={handleSubmit}>
 
-                <section>
+                <header className="checkin-header">
 
-                    <h2>How are you feeling?</h2>
-
-                    {moodOptions.map(
-                        mood => (
-                            <label
-                                key={mood}
-                                style={{
-                                    display: "block"
-                                }}
-                            >
-
-                                <input
-                                    type="checkbox"
-                                    checked={
-                                        moods.includes(
-                                            mood
-                                        )
-                                    }
-                                    onChange={() =>
-                                        toggleMood(
-                                            mood
-                                        )
-                                    }
-                                />
-
-                                {" "}
-                                {mood}
-
-                            </label>
-                        )
-                    )}
-
-                </section>
-
-                <br />
-
-                <section>
-
-                    <h2>Sleep</h2>
-
-                    <label>
-                        Hours of sleep:
-                    </label>
-
-                    <br />
-
-                    <input
-                        type="number"
-                        min="0"
-                        max="24"
-                        step="0.5"
-                        value={sleepHours}
-                        onChange={(event) =>
-                            setSleepHours(
-                                event.target.value
-                            )
-                        }
-                    />
-
-                </section>
-
-                <br />
-
-                <section>
-
-                    <h2>Medication</h2>
-
-                    <select
-                        value={medicationStatus}
-                        onChange={(event) =>
-                            setMedicationStatus(
-                                event.target.value
-                            )
+                    <button
+                        type="button"
+                        className="checkin-back-button"
+                        onClick={() =>
+                            navigate("/dashboard")
                         }
                     >
+                        ← Back
+                    </button>
 
-                        <option value="TAKEN">
-                            Taken
-                        </option>
+                    <div className="checkin-heading">
 
-                        <option value="NOT_TAKEN">
-                            Not Taken
-                        </option>
+                        <p className="checkin-eyebrow">
+                            DAILY CHECK-IN
+                        </p>
 
-                        <option value="NOT_APPLICABLE">
-                            Not Applicable
-                        </option>
+                        <h1>
+                            How are you feeling today?
+                        </h1>
 
-                    </select>
+                        <p>
+                            Take a moment to check in with
+                            yourself. There are no right or
+                            wrong answers.
+                        </p>
 
-                </section>
+                    </div>
 
-                <br />
+                </header>
 
-                <section>
 
-                    <h2>Physical Feelings</h2>
+                <form
+                    className="checkin-form"
+                    onSubmit={handleSubmit}
+                >
 
-                    {physicalFeelingOptions.map(
-                        feeling => (
+
+                    {/* MOODS */}
+
+                    <section className="checkin-card mood-section">
+
+                        <div className="checkin-card-heading">
+
+                            <div className="section-icon pink-icon">
+                                ♡
+                            </div>
+
+                            <div>
+
+                                <p className="checkin-section-label">
+                                    MOOD
+                                </p>
+
+                                <h2>
+                                    How are you feeling emotionally?
+                                </h2>
+
+                                <p>
+                                    Select as many as you need.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div className="option-chip-grid">
+
+                            {moodOptions.map(
+                                mood => (
+
+                                    <button
+                                        key={mood}
+                                        type="button"
+                                        className={
+                                            moods.includes(mood)
+                                                ? "option-chip mood-chip selected"
+                                                : "option-chip mood-chip"
+                                        }
+                                        onClick={() =>
+                                            toggleMood(mood)
+                                        }
+                                    >
+                                        {formatLabel(mood)}
+                                    </button>
+
+                                )
+                            )}
+
+                        </div>
+
+                    </section>
+
+
+                    {/* SLEEP + MEDICATION */}
+
+                    <div className="checkin-two-column">
+
+
+                        <section className="checkin-card sleep-section">
+
+                            <div className="checkin-card-heading">
+
+                                <div className="section-icon peach-icon">
+                                    ☾
+                                </div>
+
+                                <div>
+
+                                    <p className="checkin-section-label">
+                                        SLEEP
+                                    </p>
+
+                                    <h2>
+                                        Rest
+                                    </h2>
+
+                                </div>
+
+                            </div>
+
+
                             <label
-                                key={feeling}
-                                style={{
-                                    display: "block"
-                                }}
+                                className="checkin-input-label"
+                                htmlFor="sleepHours"
                             >
+                                Hours of sleep
+                            </label>
+
+                            <div className="sleep-input-wrapper">
 
                                 <input
-                                    type="checkbox"
-                                    checked={
-                                        physicalFeelings
-                                            .includes(
-                                                feeling
-                                            )
-                                    }
-                                    onChange={() =>
-                                        togglePhysicalFeeling(
-                                            feeling
+                                    id="sleepHours"
+                                    className="checkin-number-input"
+                                    type="number"
+                                    min="0"
+                                    max="24"
+                                    step="0.5"
+                                    value={sleepHours}
+                                    onChange={(event) =>
+                                        setSleepHours(
+                                            event.target.value
                                         )
                                     }
+                                    placeholder="6.5"
                                 />
 
-                                {" "}
-                                {feeling}
+                                <span>
+                                    hours
+                                </span>
 
+                            </div>
+
+                        </section>
+
+
+                        <section className="checkin-card medication-section">
+
+                            <div className="checkin-card-heading">
+
+                                <div className="section-icon lavender-icon">
+                                    +
+                                </div>
+
+                                <div>
+
+                                    <p className="checkin-section-label">
+                                        MEDICATION
+                                    </p>
+
+                                    <h2>
+                                        Medication status
+                                    </h2>
+
+                                </div>
+
+                            </div>
+
+
+                            <label
+                                className="checkin-input-label"
+                                htmlFor="medicationStatus"
+                            >
+                                Today's status
                             </label>
-                        )
+
+                            <select
+                                id="medicationStatus"
+                                className="checkin-select"
+                                value={medicationStatus}
+                                onChange={(event) =>
+                                    setMedicationStatus(
+                                        event.target.value
+                                    )
+                                }
+                            >
+
+                                <option value="TAKEN">
+                                    Taken
+                                </option>
+
+                                <option value="NOT_TAKEN">
+                                    Not Taken
+                                </option>
+
+                                <option value="NOT_APPLICABLE">
+                                    Not Applicable
+                                </option>
+
+                            </select>
+
+                        </section>
+
+                    </div>
+
+
+                    {/* PHYSICAL FEELINGS */}
+
+                    <section className="checkin-card physical-section">
+
+                        <div className="checkin-card-heading">
+
+                            <div className="section-icon sage-icon">
+                                ✦
+                            </div>
+
+                            <div>
+
+                                <p className="checkin-section-label">
+                                    PHYSICAL WELLBEING
+                                </p>
+
+                                <h2>
+                                    How does your body feel?
+                                </h2>
+
+                                <p>
+                                    Select anything you're noticing today.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div className="option-chip-grid">
+
+                            {physicalFeelingOptions.map(
+                                feeling => (
+
+                                    <button
+                                        key={feeling}
+                                        type="button"
+                                        className={
+                                            physicalFeelings.includes(
+                                                feeling
+                                            )
+                                                ? "option-chip physical-chip selected"
+                                                : "option-chip physical-chip"
+                                        }
+                                        onClick={() =>
+                                            togglePhysicalFeeling(
+                                                feeling
+                                            )
+                                        }
+                                    >
+                                        {formatLabel(feeling)}
+                                    </button>
+
+                                )
+                            )}
+
+                        </div>
+
+                    </section>
+
+
+                    {/* NOTES */}
+
+                    <section className="checkin-card notes-section">
+
+                        <div className="checkin-card-heading">
+
+                            <div className="section-icon coral-icon">
+                                ✎
+                            </div>
+
+                            <div>
+
+                                <p className="checkin-section-label">
+                                    NOTES
+                                </p>
+
+                                <h2>
+                                    Anything you'd like to remember?
+                                </h2>
+
+                                <p>
+                                    This is optional. Write whatever
+                                    feels useful to you.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <textarea
+                            className="checkin-notes"
+                            value={notes}
+                            onChange={(event) =>
+                                setNotes(
+                                    event.target.value
+                                )
+                            }
+                            rows={6}
+                            placeholder="Write a note about today..."
+                        />
+
+                    </section>
+
+
+                    {error && (
+
+                        <div className="checkin-error">
+                            {error}
+                        </div>
+
                     )}
 
-                </section>
 
-                <br />
+                    <div className="checkin-actions">
 
-                <section>
+                        <button
+                            type="button"
+                            className="checkin-cancel-button"
+                            onClick={() =>
+                                navigate("/dashboard")
+                            }
+                        >
+                            Cancel
+                        </button>
 
-                    <h2>Notes</h2>
 
-                    <textarea
-                        value={notes}
-                        onChange={(event) =>
-                            setNotes(
-                                event.target.value
-                            )
-                        }
-                        rows={5}
-                        cols={40}
-                        placeholder="Optional notes..."
-                    />
+                        <button
+                            type="submit"
+                            className="checkin-save-button"
+                            disabled={saving}
+                        >
+                            {saving
+                                ? "Saving..."
+                                : "Save Check-In"}
+                        </button>
 
-                </section>
+                    </div>
 
-                <br />
+                </form>
 
-                {error && (
-                    <p>{error}</p>
-                )}
-
-                <button
-                    type="submit"
-                    disabled={saving}
-                >
-                    {saving
-                        ? "Saving..."
-                        : "Save Check-In"}
-                </button>
-
-            </form>
-
-            <br />
-
-            <button
-                onClick={() =>
-                    navigate("/dashboard")
-                }
-            >
-                Cancel
-            </button>
+            </div>
 
         </div>
     );

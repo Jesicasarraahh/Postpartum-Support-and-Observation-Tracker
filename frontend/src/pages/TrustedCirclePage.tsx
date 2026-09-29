@@ -12,11 +12,16 @@ import type {
     TrustedCircleMember
 } from "../types";
 
+import "../styles/trustedCircle.css";
+
+
 function TrustedCirclePage() {
 
-    const { profileId } = useParams();
+    const { profileId } =
+        useParams();
 
-    const navigate = useNavigate();
+    const navigate =
+        useNavigate();
 
     const [members, setMembers] =
         useState<TrustedCircleMember[]>([]);
@@ -33,6 +38,9 @@ function TrustedCirclePage() {
     const [error, setError] =
         useState("");
 
+    const [message, setMessage] =
+        useState("");
+
     const [loading, setLoading] =
         useState(true);
 
@@ -43,6 +51,7 @@ function TrustedCirclePage() {
     async function loadMembers() {
 
         if (!profileId) {
+
             setError(
                 "Postpartum profile was not found."
             );
@@ -62,7 +71,7 @@ function TrustedCirclePage() {
             if (!response.ok) {
 
                 setError(
-                    "Could not load trusted circle."
+                    "Could not load your trusted circle."
                 );
 
                 return;
@@ -103,6 +112,7 @@ function TrustedCirclePage() {
         }
 
         setError("");
+        setMessage("");
         setSaving(true);
 
         try {
@@ -124,7 +134,7 @@ function TrustedCirclePage() {
             if (!response.ok) {
 
                 setError(
-                    "Could not add trusted person."
+                    "Could not add this person to your trusted circle."
                 );
 
                 return;
@@ -134,12 +144,16 @@ function TrustedCirclePage() {
             setEmail("");
             setRelationship("");
 
+            setMessage(
+                "Invitation sent successfully."
+            );
+
             await loadMembers();
 
         } catch {
 
             setError(
-                "Something went wrong while adding the trusted person."
+                "Something went wrong while sending the invitation."
             );
 
         } finally {
@@ -152,216 +166,357 @@ function TrustedCirclePage() {
     if (loading) {
 
         return (
-            <p>
-                Loading trusted circle...
-            </p>
+            <div className="trusted-loading">
+                Loading your trusted circle...
+            </div>
         );
     }
 
 
     return (
-        <div>
+        <div className="trusted-page">
 
-            <h1>
-                Trusted Circle
-            </h1>
-
-            <p>
-                Add the people you trust to support
-                your postpartum journey.
-            </p>
+            <div className="trusted-container">
 
 
-            <button
-                onClick={() =>
-                    navigate("/dashboard")
-                }
-            >
-                Back to Dashboard
-            </button>
+                {/* HEADER */}
 
-
-            <br />
-            <br />
-
-
-            <section>
-
-                <h2>
-                    Add Trusted Person
-                </h2>
-
-                <form onSubmit={handleSubmit}>
-
-                    <div>
-
-                        <label>
-                            Name
-                        </label>
-
-                        <br />
-
-                        <input
-                            type="text"
-                            value={name}
-                            onChange={(event) =>
-                                setName(
-                                    event.target.value
-                                )
-                            }
-                            required
-                        />
-
-                    </div>
-
-
-                    <br />
-
-
-                    <div>
-
-                        <label>
-                            Email
-                        </label>
-
-                        <br />
-
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(event) =>
-                                setEmail(
-                                    event.target.value
-                                )
-                            }
-                            required
-                        />
-
-                    </div>
-
-
-                    <br />
-
-
-                    <div>
-
-                        <label>
-                            Relationship
-                        </label>
-
-                        <br />
-
-                        <select
-                            value={relationship}
-                            onChange={(event) =>
-                                setRelationship(
-                                    event.target.value
-                                )
-                            }
-                            required
-                        >
-
-                            <option value="">
-                                Select relationship
-                            </option>
-
-                            <option value="Partner">
-                                Partner
-                            </option>
-
-                            <option value="Parent">
-                                Parent
-                            </option>
-
-                            <option value="Sibling">
-                                Sibling
-                            </option>
-
-                            <option value="Friend">
-                                Friend
-                            </option>
-
-                            <option value="Other">
-                                Other
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <br />
-
+                <header className="trusted-header">
 
                     <button
-                        type="submit"
-                        disabled={saving}
+                        type="button"
+                        className="trusted-back-button"
+                        onClick={() =>
+                            navigate("/dashboard")
+                        }
                     >
-                        {saving
-                            ? "Adding..."
-                            : "Add to Trusted Circle"}
+                        ← Back
                     </button>
 
-                </form>
 
-            </section>
+                    <div className="trusted-heading">
+
+                        <p className="trusted-eyebrow">
+                            YOUR SUPPORT SYSTEM
+                        </p>
+
+                        <h1>
+                            Trusted Circle
+                        </h1>
+
+                        <p>
+                            Invite the people you trust
+                            to support your postpartum journey
+                            and share observations with you.
+                        </p>
+
+                    </div>
+
+                </header>
 
 
-            <br />
+                {/* PAGE GRID */}
+
+                <div className="trusted-grid">
 
 
-            {error && (
-                <p>
-                    {error}
-                </p>
-            )}
+                    {/* INVITE FORM */}
 
+                    <section className="trusted-invite-card">
 
-            <section>
+                        <div className="trusted-card-heading">
 
-                <h2>
-                    Your Trusted Circle
-                </h2>
+                            <div className="trusted-heading-icon">
+                                +
+                            </div>
 
+                            <div>
 
-                {members.length === 0 ? (
-
-                    <p>
-                        You have not added anyone yet.
-                    </p>
-
-                ) : (
-
-                    <div>
-
-                        {members.map(member => (
-
-                            <div
-                                key={member.id}
-                            >
-
-                                <h3>
-                                    {member.name}
-                                </h3>
-
-                                <p>
-                                    {member.relationship}
+                                <p className="trusted-card-label">
+                                    INVITE SOMEONE
                                 </p>
 
-                                <p>
-                                    {member.email}
-                                </p>
+                                <h2>
+                                    Add to your circle
+                                </h2>
 
-                                <br />
+                                <p>
+                                    They'll receive an email
+                                    with their personal access link.
+                                </p>
 
                             </div>
 
-                        ))}
+                        </div>
+
+
+                        <form
+                            className="trusted-form"
+                            onSubmit={handleSubmit}
+                        >
+
+                            <div className="trusted-field">
+
+                                <label htmlFor="trustedName">
+                                    Name
+                                </label>
+
+                                <input
+                                    id="trustedName"
+                                    type="text"
+                                    value={name}
+                                    onChange={(event) =>
+                                        setName(
+                                            event.target.value
+                                        )
+                                    }
+                                    placeholder="e.g. Daniel"
+                                    required
+                                />
+
+                            </div>
+
+
+                            <div className="trusted-field">
+
+                                <label htmlFor="trustedEmail">
+                                    Email
+                                </label>
+
+                                <input
+                                    id="trustedEmail"
+                                    type="email"
+                                    value={email}
+                                    onChange={(event) =>
+                                        setEmail(
+                                            event.target.value
+                                        )
+                                    }
+                                    placeholder="name@example.com"
+                                    required
+                                />
+
+                            </div>
+
+
+                            <div className="trusted-field">
+
+                                <label htmlFor="relationship">
+                                    Relationship
+                                </label>
+
+                                <select
+                                    id="relationship"
+                                    value={relationship}
+                                    onChange={(event) =>
+                                        setRelationship(
+                                            event.target.value
+                                        )
+                                    }
+                                    required
+                                >
+
+                                    <option value="">
+                                        Select relationship
+                                    </option>
+
+                                    <option value="Partner">
+                                        Partner
+                                    </option>
+
+                                    <option value="Parent">
+                                        Parent
+                                    </option>
+
+                                    <option value="Sibling">
+                                        Sibling
+                                    </option>
+
+                                    <option value="Friend">
+                                        Friend
+                                    </option>
+
+                                    <option value="Other">
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            {message && (
+                                <div className="trusted-success">
+                                    {message}
+                                </div>
+                            )}
+
+
+                            {error && (
+                                <div className="trusted-error">
+                                    {error}
+                                </div>
+                            )}
+
+
+                            <button
+                                type="submit"
+                                className="trusted-submit-button"
+                                disabled={saving}
+                            >
+                                {saving
+                                    ? "Sending Invitation..."
+                                    : "Send Invitation"}
+                            </button>
+
+                        </form>
+
+                    </section>
+
+
+                    {/* MEMBER LIST */}
+
+                    <section className="trusted-members-card">
+
+                        <div className="trusted-members-heading">
+
+                            <div>
+
+                                <p className="trusted-card-label">
+                                    YOUR CIRCLE
+                                </p>
+
+                                <h2>
+                                    People supporting you
+                                </h2>
+
+                            </div>
+
+
+                            <span className="trusted-count">
+                                {members.length}
+                                {" "}
+                                {members.length === 1
+                                    ? "person"
+                                    : "people"}
+                            </span>
+
+                        </div>
+
+
+                        {members.length === 0 ? (
+
+                            <div className="trusted-empty">
+
+                                <div className="trusted-empty-icon">
+                                    ◌
+                                </div>
+
+                                <h3>
+                                    Your circle is empty
+                                </h3>
+
+                                <p>
+                                    Add someone you trust
+                                    using the invitation form.
+                                </p>
+
+                            </div>
+
+                        ) : (
+
+                            <div className="trusted-member-list">
+
+                                {members.map(
+                                    (member, index) => (
+
+                                        <article
+                                            key={member.id}
+                                            className={
+                                                index % 3 === 0
+                                                    ? "trusted-member member-lavender"
+                                                    : index % 3 === 1
+                                                        ? "trusted-member member-peach"
+                                                        : "trusted-member member-sage"
+                                            }
+                                        >
+
+                                            <div className="member-avatar">
+                                                {member.name
+                                                    .charAt(0)
+                                                    .toUpperCase()}
+                                            </div>
+
+
+                                            <div className="member-info">
+
+                                                <h3>
+                                                    {member.name}
+                                                </h3>
+
+                                                <span className="relationship-badge">
+                                                    {member.relationship}
+                                                </span>
+
+                                                <p>
+                                                    {member.email}
+                                                </p>
+
+                                            </div>
+
+
+                                            <div className="member-status">
+
+                                                <span className="status-dot">
+                                                </span>
+
+                                                Invited
+
+                                            </div>
+
+                                        </article>
+
+                                    )
+                                )}
+
+                            </div>
+
+                        )}
+
+                    </section>
+
+                </div>
+
+
+                {/* INFO CARD */}
+
+                <section className="trusted-info-card">
+
+                    <div className="trusted-info-icon">
+                        ♡
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            How Trusted Circle works
+                        </h3>
+
+                        <p>
+                            Each person you invite receives
+                            their own access link. They can
+                            record what they personally observe,
+                            and those observations can appear
+                            alongside your check-ins in your
+                            combined timeline.
+                        </p>
 
                     </div>
-                )}
 
-            </section>
+                </section>
+
+
+            </div>
 
         </div>
     );

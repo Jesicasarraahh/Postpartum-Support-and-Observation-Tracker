@@ -27,6 +27,12 @@
     --radius-small: 12px;
     --radius-medium: 18px;
     --radius-large: 28px;
+
+    --sage: #bfd0b4;
+    --sage-light: #edf5e9;
+
+    --coral: #e98c8c;
+    --coral-light: #fce7e7;
 }
 
 * {
@@ -51,12 +57,10 @@ body {
         sans-serif;
 
     background:
-        linear-gradient(
-            135deg,
+        linear-gradient(135deg,
             var(--cream),
             var(--pink-light),
-            var(--peach-light)
-        );
+            var(--peach-light));
 
     color: var(--text-main);
 }

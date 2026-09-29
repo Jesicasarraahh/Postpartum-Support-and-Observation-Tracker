@@ -9,6 +9,9 @@ import {
 import { apiRequest } from "../services/api";
 import { saveToken } from "../auth/token";
 
+import "../styles/login.css";
+
+
 function LoginPage() {
 
     const navigate = useNavigate();
@@ -24,6 +27,7 @@ function LoginPage() {
 
     const [loading, setLoading] =
         useState(false);
+
 
     async function handleSubmit(
         event: FormEvent
@@ -77,93 +81,198 @@ function LoginPage() {
         }
     }
 
+
     return (
-        <div>
+        <div className="login-page">
 
-            <h1>Login</h1>
+            <div className="login-container">
 
-            <p>
-                Welcome back to the Postpartum
-                Support & Observation Tracker.
-            </p>
 
-            <form onSubmit={handleSubmit}>
+                {/* LEFT SIDE */}
 
-                <div>
+                <section className="login-welcome-panel">
 
-                    <label htmlFor="email">
-                        Email
-                    </label>
+                    <p className="login-brand">
+                        Postpartum Support Tracker
+                    </p>
 
-                    <br />
+                    <div className="login-welcome-content">
 
-                    <input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(event) =>
-                            setEmail(
-                                event.target.value
-                            )
-                        }
-                        required
-                    />
+                        <p className="login-eyebrow">
+                            WELCOME BACK
+                        </p>
 
-                </div>
+                        <h1>
+                            Your support space is here when you need it.
+                        </h1>
 
-                <br />
+                        <p>
+                            Check in with yourself, review your journey,
+                            and stay connected with the people you trust.
+                        </p>
 
-                <div>
+                    </div>
 
-                    <label htmlFor="password">
-                        Password
-                    </label>
 
-                    <br />
+                    <div className="login-support-card">
 
-                    <input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(event) =>
-                            setPassword(
-                                event.target.value
-                            )
-                        }
-                        required
-                    />
+                        <div className="login-support-icon">
+                            ♡
+                        </div>
 
-                </div>
+                        <div>
 
-                <p>
-                    <Link to="/forgot-password">
-                        Forgot password?
+                            <strong>
+                                Mother-controlled
+                            </strong>
+
+                            <p>
+                                You decide what to record,
+                                who to invite, and what to share.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                {/* RIGHT SIDE */}
+
+                <section className="login-form-card">
+
+                    <div className="login-form-heading">
+
+                        <p className="login-eyebrow">
+                            SIGN IN
+                        </p>
+
+                        <h2>
+                            Welcome back
+                        </h2>
+
+                        <p>
+                            Log in to continue to your postpartum
+                            support space.
+                        </p>
+
+                    </div>
+
+
+                    <form
+                        className="login-form"
+                        onSubmit={handleSubmit}
+                    >
+
+
+                        <div className="login-field">
+
+                            <label htmlFor="email">
+                                Email
+                            </label>
+
+                            <input
+                                id="email"
+                                type="email"
+                                value={email}
+                                onChange={(event) =>
+                                    setEmail(
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="you@example.com"
+                                required
+                            />
+
+                        </div>
+
+
+                        <div className="login-field">
+
+                            <div className="login-password-row">
+
+                                <label htmlFor="password">
+                                    Password
+                                </label>
+
+                                <Link
+                                    to="/forgot-password"
+                                    className="login-forgot-link"
+                                >
+                                    Forgot password?
+                                </Link>
+
+                            </div>
+
+                            <input
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(event) =>
+                                    setPassword(
+                                        event.target.value
+                                    )
+                                }
+                                placeholder="Enter your password"
+                                required
+                            />
+
+                        </div>
+
+
+                        {error && (
+
+                            <div className="login-error">
+                                {error}
+                            </div>
+
+                        )}
+
+
+                        <button
+                            type="submit"
+                            className="login-submit-button"
+                            disabled={loading}
+                        >
+                            {loading
+                                ? "Logging in..."
+                                : "Log In"}
+                        </button>
+
+                    </form>
+
+
+                    <div className="login-divider">
+
+                        <span>
+                            New here?
+                        </span>
+
+                    </div>
+
+
+                    <p className="login-register-text">
+                        Don't have an account?
+                        {" "}
+
+                        <Link to="/register">
+                            Create Account
+                        </Link>
+                    </p>
+
+
+                    <Link
+                        to="/"
+                        className="login-home-link"
+                    >
+                        ← Back to Home
                     </Link>
-                </p>
 
-                {error && (
-                    <p>{error}</p>
-                )}
+                </section>
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                >
-                    {loading
-                        ? "Logging in..."
-                        : "Log In"}
-                </button>
 
-            </form>
-
-            <br />
-
-            <p>
-                Don't have an account?{" "}
-                <Link to="/register">
-                    Create Account
-                </Link>
-            </p>
+            </div>
 
         </div>
     );
