@@ -30,6 +30,9 @@ import LandingPage
 import TrustedCirclePage
     from "./pages/TrustedCirclePage";
 
+import TrustedAccessPage
+    from "./pages/TrustedAccessPage";
+
 function App() {
 
     return (
@@ -105,6 +108,10 @@ function App() {
                 <Route
                     path="/reset-password"
                     element={<ResetPasswordPage />}
+                />
+                <Route
+                    path="/trusted-access"
+                    element={<TrustedAccessPage />}
                 />
 
             </Routes>
