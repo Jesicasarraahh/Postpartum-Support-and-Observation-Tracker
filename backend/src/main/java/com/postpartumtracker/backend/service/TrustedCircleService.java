@@ -21,131 +21,132 @@ import java.util.UUID;
 @Service
 public class TrustedCircleService {
 
-    private final TrustedCircleMemberRepository trustedCircleMemberRepository;
-    private final PostpartumProfileRepository postpartumProfileRepository;
-    private final UserRepository userRepository;
-    private final TrustedCircleInviteTokenRepository inviteTokenRepository;
-    private final EmailService emailService;
+        private final TrustedCircleMemberRepository trustedCircleMemberRepository;
+        private final PostpartumProfileRepository postpartumProfileRepository;
+        private final UserRepository userRepository;
+        private final TrustedCircleInviteTokenRepository inviteTokenRepository;
+        private final EmailService emailService;
 
-    public TrustedCircleService(
-            TrustedCircleMemberRepository trustedCircleMemberRepository,
-            PostpartumProfileRepository postpartumProfileRepository,
-            UserRepository userRepository,
-            TrustedCircleInviteTokenRepository inviteTokenRepository,
-            EmailService emailService) {
+        public TrustedCircleService(
+                        TrustedCircleMemberRepository trustedCircleMemberRepository,
+                        PostpartumProfileRepository postpartumProfileRepository,
+                        UserRepository userRepository,
+                        TrustedCircleInviteTokenRepository inviteTokenRepository,
+                        EmailService emailService) {
 
-        this.trustedCircleMemberRepository = trustedCircleMemberRepository;
+                this.trustedCircleMemberRepository = trustedCircleMemberRepository;
 
-        this.postpartumProfileRepository = postpartumProfileRepository;
+                this.postpartumProfileRepository = postpartumProfileRepository;
 
-        this.userRepository = userRepository;
+                this.userRepository = userRepository;
 
-        this.inviteTokenRepository = inviteTokenRepository;
+                this.inviteTokenRepository = inviteTokenRepository;
 
-        this.emailService = emailService;
-    }
-
-    @Transactional
-    public TrustedCircleMember addMember(
-            Long profileId,
-            String email,
-            CreateTrustedCircleMemberRequest request) {
-
-        User user = userRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User not found"));
-
-        PostpartumProfile profile = postpartumProfileRepository
-                .findById(profileId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Postpartum profile not found"));
-
-        if (!profile.getOwner().getId()
-                .equals(user.getId())) {
-
-            throw new IllegalArgumentException(
-                    "You do not have permission to manage this trusted circle");
+                this.emailService = emailService;
         }
 
-        TrustedCircleMember member = new TrustedCircleMember();
+        @Transactional
+        public TrustedCircleMember addMember(
+                        Long profileId,
+                        String email,
+                        CreateTrustedCircleMemberRequest request) {
 
-        member.setPostpartumProfile(profile);
-        member.setName(request.getName());
-        member.setEmail(request.getEmail());
-        member.setRelationship(
-                request.getRelationship());
+                User user = userRepository
+                                .findByEmail(email)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "User not found"));
 
-        TrustedCircleMember savedMember = trustedCircleMemberRepository.save(member);
+                PostpartumProfile profile = postpartumProfileRepository
+                                .findById(profileId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Postpartum profile not found"));
 
-        TrustedCircleInviteToken inviteToken = new TrustedCircleInviteToken();
+                if (!profile.getOwner().getId()
+                                .equals(user.getId())) {
 
-        inviteToken.setTrustedCircleMember(savedMember);
+                        throw new IllegalArgumentException(
+                                        "You do not have permission to manage this trusted circle");
+                }
 
-        inviteToken.setToken(
-                UUID.randomUUID().toString());
+                TrustedCircleMember member = new TrustedCircleMember();
 
-        inviteToken.setExpiresAt(
-                LocalDateTime.now().plusDays(7));
+                member.setPostpartumProfile(profile);
+                member.setName(request.getName());
+                member.setEmail(request.getEmail());
+                member.setRelationship(
+                                request.getRelationship());
 
-        TrustedCircleInviteToken savedToken = inviteTokenRepository.save(inviteToken);
+                TrustedCircleMember savedMember = trustedCircleMemberRepository.save(member);
 
-        emailService.sendTrustedCircleInviteEmail(
-                savedMember.getEmail(),
-                savedMember.getName(),
-                savedToken.getToken());
+                TrustedCircleInviteToken inviteToken = new TrustedCircleInviteToken();
 
-        return savedMember;
-    }
+                inviteToken.setTrustedCircleMember(savedMember);
 
-    public List<TrustedCircleMember> getMembers(
-            Long profileId,
-            String email) {
+                inviteToken.setToken(
+                                UUID.randomUUID().toString());
 
-        User user = userRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "User not found"));
+                inviteToken.setExpiresAt(
+                                LocalDateTime.now().plusDays(7));
 
-        PostpartumProfile profile = postpartumProfileRepository
-                .findById(profileId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Postpartum profile not found"));
+                TrustedCircleInviteToken savedToken = inviteTokenRepository.save(inviteToken);
 
-        if (!profile.getOwner().getId()
-                .equals(user.getId())) {
+                emailService.sendTrustedCircleInviteEmail(
+                                savedMember.getEmail(),
+                                savedMember.getName(),
+                                savedToken.getToken());
 
-            throw new IllegalArgumentException(
-                    "You do not have permission to view this trusted circle");
+                return savedMember;
         }
 
-        return trustedCircleMemberRepository
-                .findByPostpartumProfile(profile);
-    }
-    public TrustedCircleMember validateInviteToken(
-        String tokenValue) {
+        public List<TrustedCircleMember> getMembers(
+                        Long profileId,
+                        String email) {
 
-    TrustedCircleInviteToken inviteToken =
-            inviteTokenRepository
-                    .findByToken(tokenValue)
-                    .orElseThrow(() ->
-                            new IllegalArgumentException(
-                                    "Invalid trusted-circle access link"
-                            )
-                    );
+                User user = userRepository
+                                .findByEmail(email)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "User not found"));
 
-    if (inviteToken
-            .getExpiresAt()
-            .isBefore(LocalDateTime.now())) {
+                PostpartumProfile profile = postpartumProfileRepository
+                                .findById(profileId)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Postpartum profile not found"));
 
-        throw new IllegalArgumentException(
-                "Trusted-circle access link has expired"
-        );
-    }
+                if (!profile.getOwner().getId()
+                                .equals(user.getId())) {
 
-    return inviteToken
-            .getTrustedCircleMember();
-}
+                        throw new IllegalArgumentException(
+                                        "You do not have permission to view this trusted circle");
+                }
+
+                return trustedCircleMemberRepository
+                                .findByPostpartumProfile(profile);
+        }
+
+        public TrustedCircleMember validateInviteToken(
+                        String tokenValue) {
+
+                TrustedCircleInviteToken inviteToken = inviteTokenRepository
+                                .findByToken(tokenValue)
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Invalid trusted-circle access link"));
+
+                if (inviteToken
+                                .getExpiresAt()
+                                .isBefore(LocalDateTime.now())) {
+
+                        throw new IllegalArgumentException(
+                                        "Trusted-circle access link has expired");
+                }
+                TrustedCircleMember member = inviteToken.getTrustedCircleMember();
+                if(!member.isActive()) {
+                    throw new IllegalArgumentException(
+                            "Trusted-circle access link is no longer active");
+                }
+
+                return member;
+        }
+
 @Transactional
 public void revokeMemberAccess(
     Long profileId,
@@ -206,4 +207,6 @@ public void revokeMemberAccess(
 
     trustedCircleMemberRepository.save(member);
 }
+
+
 }
