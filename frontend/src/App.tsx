@@ -27,6 +27,9 @@ import ResetPasswordPage
 import LandingPage
     from "./pages/LandingPage";
 
+import TrustedCirclePage
+    from "./pages/TrustedCirclePage";
+
 function App() {
 
     return (
@@ -65,6 +68,14 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route
+    path="/trusted-circle/:profileId"
+    element={
+        <ProtectedRoute>
+            <TrustedCirclePage />
+        </ProtectedRoute>
+    }
+/>
                 <Route
     path="/profile/setup"
     element={
