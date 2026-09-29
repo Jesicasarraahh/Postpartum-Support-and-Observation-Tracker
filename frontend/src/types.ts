@@ -22,3 +22,10 @@ export type CheckIn = {
     moods: string[];
     physicalFeelings: string[];
 };
+export type TrustedCircleMember = {
+    id: number;
+    name: string;
+    email: string;
+    relationship: string;
+    createdAt: string;
+};
