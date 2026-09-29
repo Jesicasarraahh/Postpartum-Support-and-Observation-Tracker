@@ -203,6 +203,17 @@ function DashboardPage() {
                                 View Check-In History
                             </Link>
 
+                            <br />
+                            <br />
+
+                            <Link
+                                to={
+                                    `/trusted-circle/${profiles[0].id}`
+                                }
+                            >
+                                Manage Trusted Circle
+                            </Link>
+
                         </div>
                     )}
 

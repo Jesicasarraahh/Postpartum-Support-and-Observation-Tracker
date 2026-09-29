@@ -42,13 +42,13 @@ function App() {
                 />
 
                 <Route
-    path="/check-ins/:profileId"
-    element={
-        <ProtectedRoute>
-            <CheckInHistoryPage />
-        </ProtectedRoute>
-    }
-/>
+                    path="/check-ins/:profileId"
+                    element={
+                        <ProtectedRoute>
+                            <CheckInHistoryPage />
+                        </ProtectedRoute>
+                    }
+                />
 
                 <Route
                     path="/login"
@@ -69,43 +69,43 @@ function App() {
                     }
                 />
                 <Route
-    path="/trusted-circle/:profileId"
-    element={
-        <ProtectedRoute>
-            <TrustedCirclePage />
-        </ProtectedRoute>
-    }
-/>
+                    path="/trusted-circle/:profileId"
+                    element={
+                        <ProtectedRoute>
+                            <TrustedCirclePage />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
-    path="/profile/setup"
-    element={
-        <ProtectedRoute>
-            <ProfileSetupPage />
-        </ProtectedRoute>
-    }
-/>
+                    path="/profile/setup"
+                    element={
+                        <ProtectedRoute>
+                            <ProfileSetupPage />
+                        </ProtectedRoute>
+                    }
+                />
 
-<Route
-    path="/check-in/:profileId"
-    element={
-        <ProtectedRoute>
-            <NewCheckInPage />
-        </ProtectedRoute>
-    }
-/>
-<Route
-    path="/verify-email"
-    element={<VerifyEmailPage />}
-/>
-<Route
-    path="/forgot-password"
-    element={<ForgotPasswordPage />}
-/>
+                <Route
+                    path="/check-in/:profileId"
+                    element={
+                        <ProtectedRoute>
+                            <NewCheckInPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/verify-email"
+                    element={<VerifyEmailPage />}
+                />
+                <Route
+                    path="/forgot-password"
+                    element={<ForgotPasswordPage />}
+                />
 
-<Route
-    path="/reset-password"
-    element={<ResetPasswordPage />}
-/>
+                <Route
+                    path="/reset-password"
+                    element={<ResetPasswordPage />}
+                />
 
             </Routes>
         </BrowserRouter>
