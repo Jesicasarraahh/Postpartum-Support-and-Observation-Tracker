@@ -79,7 +79,7 @@ function TrustedCirclePage() {
 
             const data:
                 TrustedCircleMember[] =
-                    await response.json();
+                await response.json();
 
             setMembers(data);
 
@@ -97,7 +97,9 @@ function TrustedCirclePage() {
 
 
     useEffect(() => {
+
         loadMembers();
+
     }, [profileId]);
 
 
@@ -159,6 +161,62 @@ function TrustedCirclePage() {
         } finally {
 
             setSaving(false);
+        }
+    }
+
+
+    async function handleRevokeAccess(
+        member: TrustedCircleMember
+    ) {
+
+        const confirmed =
+            window.confirm(
+                `Remove ${member.name}'s access?\n\n` +
+                "They will no longer be able to submit new observations. " +
+                "Their previous observations will remain in your timeline."
+            );
+
+        if (!confirmed) {
+            return;
+        }
+
+        if (!profileId) {
+            return;
+        }
+
+        setError("");
+        setMessage("");
+
+        try {
+
+            const response =
+                await apiRequest(
+                    `/api/postpartum-profiles/${profileId}/trusted-circle/${member.id}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+            if (!response.ok) {
+
+                setError(
+                    "Could not remove this person's access."
+                );
+
+                return;
+            }
+
+            setMessage(
+                `${member.name}'s access has been removed.`
+            );
+
+            await loadMembers();
+
+        } catch {
+
+            setError(
+                "Something went wrong while removing access."
+            );
         }
     }
 
@@ -346,16 +404,20 @@ function TrustedCirclePage() {
 
 
                             {message && (
+
                                 <div className="trusted-success">
                                     {message}
                                 </div>
+
                             )}
 
 
                             {error && (
+
                                 <div className="trusted-error">
                                     {error}
                                 </div>
+
                             )}
 
 
@@ -442,9 +504,11 @@ function TrustedCirclePage() {
                                         >
 
                                             <div className="member-avatar">
+
                                                 {member.name
                                                     .charAt(0)
                                                     .toUpperCase()}
+
                                             </div>
 
 
@@ -465,12 +529,41 @@ function TrustedCirclePage() {
                                             </div>
 
 
-                                            <div className="member-status">
+                                            <div className="member-actions">
 
-                                                <span className="status-dot">
-                                                </span>
+                                                <div
+                                                    className={
+                                                        member.active
+                                                            ? "member-status active-status"
+                                                            : "member-status revoked-status"
+                                                    }
+                                                >
 
-                                                Invited
+                                                    <span className="status-dot">
+                                                    </span>
+
+                                                    {member.active
+                                                        ? "Active"
+                                                        : "Access Revoked"}
+
+                                                </div>
+
+
+                                                {member.active && (
+
+                                                    <button
+                                                        type="button"
+                                                        className="revoke-access-button"
+                                                        onClick={() =>
+                                                            handleRevokeAccess(
+                                                                member
+                                                            )
+                                                        }
+                                                    >
+                                                        Remove Access
+                                                    </button>
+
+                                                )}
 
                                             </div>
 
@@ -508,7 +601,9 @@ function TrustedCirclePage() {
                             record what they personally observe,
                             and those observations can appear
                             alongside your check-ins in your
-                            combined timeline.
+                            combined timeline. You can remove
+                            their access at any time without
+                            deleting their previous observations.
                         </p>
 
                     </div>

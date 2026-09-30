@@ -28,6 +28,7 @@ export type TrustedCircleMember = {
     email: string;
     relationship: string;
     createdAt: string;
+    active: boolean;
 };
 export type TimelineItem = {
     type: "MOTHER_CHECK_IN" | "TRUSTED_OBSERVATION";

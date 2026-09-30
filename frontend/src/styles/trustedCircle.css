@@ -663,4 +663,9 @@
     .trusted-info-card {
         flex-direction: column;
     }
+    .member-actions {
+    grid-column: 2;
+    align-items: flex-start;
+}
+    
 }
